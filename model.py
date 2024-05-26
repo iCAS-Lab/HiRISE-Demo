@@ -1,16 +1,23 @@
+
+import os
+
 import tensorflow as tf
 import numpy as np
 import torch
 import cv2
 import torch.nn.functional as F
+import numpy as np
+import numpy as np
+
 class TFLite():
-    def __init__(self, path, labels=None):
+    def __init__(self, path, labels=None, anchors="models/hand_detect/anchors.npy"):
         self.path = path
         self.interpreter = tf.lite.Interpreter(model_path=path)
         self.interpreter.allocate_tensors()
         self.input_shape = self.interpreter.get_input_details()[0]['shape']
         self.width, self.height = self.input_shape[1], self.input_shape[2]
         self.labels = labels
+        self.anchors = np.load(anchors)
         print("Loaded TFLite with input shape: ", self.input_shape)
 
     def __call__(self, input):
@@ -29,8 +36,7 @@ class TFLite():
         self.interpreter.invoke()
 
         # Get output tensor
-        output_data = self.interpreter.get_tensor(output_details[0]['index'])
-        pred = np.argmax(F.softmax(torch.tensor(output_data)).numpy())
-        if not self.labels is None:
-            return self.labels[pred]
-        return pred
+        regressors = self.interpreter.get_tensor(output_details[0]['index'])[0]
+        classificators = self.interpreter.get_tensor(output_details[1]['index'])[0,:,0]
+        
+        return output_data

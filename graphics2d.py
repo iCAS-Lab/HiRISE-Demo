@@ -2,6 +2,10 @@ import numpy as np
 import cv2
 import copy
 
+from mediapipe import solutions
+from mediapipe.framework.formats import landmark_pb2
+import numpy as np
+
 def relative_to_absolute(relative_pos, max_size):
     relx,rely = relative_pos
     sx,sy = max_size
@@ -12,7 +16,7 @@ def absolute_to_relative(absolute_pos, max_size):
     sx,sy = max_size
     return px/sx, py/sy
 
-def draw_bbox_on_image(image, relative_x, relative_y, relative_w, relative_h, color=(0, 255, 0), thickness=2):
+def draw_bbox_on_image(image, relative_x, relative_y, relative_w, relative_h, color=(0, 255, 0), thickness=4):
     """
     Draw a bounding box on an image based on relative coordinates.
 
@@ -25,6 +29,7 @@ def draw_bbox_on_image(image, relative_x, relative_y, relative_w, relative_h, co
         color (tuple): Bounding box color in BGR format. Default is green.
         thickness (int): Thickness of the bounding box lines. Default is 2.
     """
+    color = (color[2], color[1], color[0])
     height, width = image.shape[:2]
     x = int(relative_x * width)
     y = int(relative_y * height)
@@ -97,18 +102,66 @@ def resize_with_aspect_ratio(image, target_width=None, target_height=None):
 
     return cv2.resize(image, (target_width, target_height), cv2.INTER_NEAREST)
 
+MARGIN = 10  # pixels
+FONT_SIZE = 1
+FONT_THICKNESS = 1
+HANDEDNESS_TEXT_COLOR = (88, 205, 54) # vibrant green
+
+def draw_landmarks_on_image(rgb_image, detection_result):
+  hand_landmarks_list = detection_result.hand_landmarks
+  handedness_list = detection_result.handedness
+  annotated_image = np.copy(rgb_image)
+
+  # Loop through the detected hands to visualize.
+  for idx in range(len(hand_landmarks_list)):
+    hand_landmarks = hand_landmarks_list[idx]
+    handedness = handedness_list[idx]
+
+    # Draw the hand landmarks.
+    hand_landmarks_proto = landmark_pb2.NormalizedLandmarkList()
+    hand_landmarks_proto.landmark.extend([
+      landmark_pb2.NormalizedLandmark(x=landmark.x, y=landmark.y, z=landmark.z) for landmark in hand_landmarks
+    ])
+    solutions.drawing_utils.draw_landmarks(
+      annotated_image,
+      hand_landmarks_proto,
+      solutions.hands.HAND_CONNECTIONS,
+      solutions.drawing_styles.get_default_hand_landmarks_style(),
+      solutions.drawing_styles.get_default_hand_connections_style())
+
+    # Get the top left corner of the detected hand's bounding box.
+    height, width, _ = annotated_image.shape
+    x_coordinates = [landmark.x for landmark in hand_landmarks]
+    y_coordinates = [landmark.y for landmark in hand_landmarks]
+    text_x = int(min(x_coordinates) * width)
+    text_y = int(min(y_coordinates) * height) - MARGIN
+
+    # Draw handedness (left or right hand) on the image.
+    cv2.putText(annotated_image, f"{handedness[0].category_name}",
+                (text_x, text_y), cv2.FONT_HERSHEY_DUPLEX,
+                FONT_SIZE, HANDEDNESS_TEXT_COLOR, FONT_THICKNESS, cv2.LINE_AA)
+
+  return annotated_image
+
 class ViewGridElement():
-    def __init__(self, name, position, size, grid, meta=None):
+    def __init__(self, name, position, size, grid, meta):
         self.name = name
-        self.position = position
+        self.border_px = meta["border"]["width"]
+        self.border_color = meta["border"]["color"]
         self.x, self.y = position
-        self.size = size
         self.width, self.height = size
+        self.position = (self.x, self.y)
+        self.size = (self.width, self.height)
         self.grid = grid
-        self.meta = meta if not meta is None else {}
+        self.meta = meta
+
 
     def render(self):
-        pass
+        self.grid.fill(self.name, self.border_color)
+        self.x+=self.border_px
+        self.y+=self.border_px
+        self.width-=self.border_px*2
+        self.height-=self.border_px*2
 
 class ResizeModes():
     scale = 0
@@ -131,7 +184,11 @@ class ResizeModes():
 
 class ViewGrid():
     DEFAULT_META_VALUES = {
-        "resize":ResizeModes.scale
+        "resize":ResizeModes.scale,
+        "border":{
+            "color":(255,255,255),
+            "width":2,
+        }
     }
     def __init__(self, size, channels=3, dtype=np.uint8):
         self.size = size
@@ -167,14 +224,17 @@ class ViewGrid():
         if x<0 or y<0 or x+w>=self.width or y+h>=self.height:
             raise ValueError(f"Expected (x,y), (w,h) to be in range 0<x<x+w<width, 0<y<y+h<height got ({x},{y}), ({w}, {h}), for canvas of size ({self.width}), ({self.height})")
 
-        self.canvas_elements.append(ViewGridElement(len(self.canvas_elements),
-                                                    (x,y), (w,h), self, meta=meta))
+        element = ViewGridElement(len(self.canvas_elements), (x,y), (w,h), self, meta=meta)
+        self.canvas_elements.append(element)
+        element.render()
         
         return len(self.canvas_elements)-1
     
     def set(self, grid_idx, new_canvas, cv2=False):
         new_canvas = np.swapaxes(new_canvas, 0, 1) if cv2 else new_canvas
         new_canvas = new_canvas.astype(self.dtype)
+        if new_canvas.shape[0] <= 0 or new_canvas.shape[1] <= 0:
+            new_canvas = np.zeros((1,1,3))
         element = self.canvas_elements[grid_idx]
         new_canvas = ResizeModes.scale_modes[element.meta["resize"]](element, new_canvas)
         self.canvas[element.x:element.x+element.width,
@@ -190,16 +250,44 @@ class ViewGrid():
         for element in self.canvas_elements:
             element.render()
 
+    def draw_text(self, grid_idx, text, font_color=(255, 255, 255), font_scale=0.75):
+        # Choose font, scale, and color
+        image = self.numpy(grid_idx).copy()
+        font = cv2.FONT_HERSHEY_SIMPLEX
+
+        # Calculate text size
+        text_size, _ = cv2.getTextSize(text, font, font_scale, thickness=2)
+
+        # Calculate text position
+        text_x = (image.shape[1] - text_size[0]) // 2
+        text_y = (image.shape[0] + text_size[1]) // 2
+
+        # Draw text on the image
+        cv2.putText(image, text, (text_x, text_y), font, font_scale, font_color, thickness=2)
+        self.set(grid_idx, image, cv2=True)
+
+
 class MainDisplay():
     def __init__(self):
         self.view = ViewGrid((1280,720))
         self.left_half_idx = self.view.grid(coords_rel=(0,0,0.8,1))
-        self.hirise_img = self.view.grid(coords_rel=(0.8,0,0.2,0.5))
-        self.baseline_img = self.view.grid(coords_rel=(0.8,0.5,0.2,0.5))
+        self.hirise_img = self.view.grid(coords_rel=(0.8,0,0.2,0.5), coords_abs=(0,80,0,-80))
+        self.baseline_img = self.view.grid(coords_rel=(0.8,0.5,0.2,0.5), coords_abs=(0,80,0,-80))
+
+        self.hirise_caption = self.view.grid(coords_rel=(0.8,0,0.2,0), coords_abs=(0,0,0,80))
+        self.baseline_caption = self.view.grid(coords_rel=(0.8,0.5,0.2,0), coords_abs=(0,0,0,80))
+
+        self.hirise_color = (141,164,78)
+        self.baseline_color = (238,147,56)
 
         self.view.fill(self.left_half_idx, (255,0,0))
         self.view.fill(self.hirise_img, (0,255,0))
         self.view.fill(self.baseline_img, (0,255,255))
+        self.view.fill(self.hirise_caption, (141,164,78))
+        self.view.fill(self.baseline_caption, (238,147,56))
+
+        self.view.draw_text(self.hirise_caption, "HiRISE: Enabled")
+        self.view.draw_text(self.baseline_caption, "HiRISE: Disabled")
 
     def cv2(self):
         return self.view.cv2()
