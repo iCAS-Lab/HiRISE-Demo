@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'MainWindow.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.1
+## Created by: Qt User Interface Compiler version 6.7.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -27,13 +27,13 @@ class Ui_MainWindow(object):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(1129, 800)
-        sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
         MainWindow.setSizePolicy(sizePolicy)
-        MainWindow.setStyleSheet(u"")
-        MainWindow.setTabShape(QTabWidget.Rounded)
+        MainWindow.setStyleSheet(u"background-color: rgb(92, 92, 92);")
+        MainWindow.setTabShape(QTabWidget.TabShape.Rounded)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         sizePolicy.setHeightForWidth(self.centralwidget.sizePolicy().hasHeightForWidth())
@@ -49,14 +49,14 @@ class Ui_MainWindow(object):
         self.verticalLayout_8.setObjectName(u"verticalLayout_8")
         self.detectLabel = QLabel(self.detect)
         self.detectLabel.setObjectName(u"detectLabel")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Maximum)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.detectLabel.sizePolicy().hasHeightForWidth())
         self.detectLabel.setSizePolicy(sizePolicy1)
         self.detectLabel.setMaximumSize(QSize(16777215, 64))
         self.detectLabel.setStyleSheet(u"background-color: rgb(115, 0, 10);")
-        self.detectLabel.setAlignment(Qt.AlignCenter)
+        self.detectLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.verticalLayout_8.addWidget(self.detectLabel)
 
@@ -64,7 +64,7 @@ class Ui_MainWindow(object):
         self.detectVideo.setObjectName(u"detectVideo")
         sizePolicy.setHeightForWidth(self.detectVideo.sizePolicy().hasHeightForWidth())
         self.detectVideo.setSizePolicy(sizePolicy)
-        self.detectVideo.setAlignment(Qt.AlignCenter)
+        self.detectVideo.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.verticalLayout_8.addWidget(self.detectVideo)
 
@@ -83,7 +83,7 @@ class Ui_MainWindow(object):
         self.disabledLabel.setSizePolicy(sizePolicy1)
         self.disabledLabel.setMaximumSize(QSize(16777215, 64))
         self.disabledLabel.setStyleSheet(u"background-color: rgb(115, 0, 10);")
-        self.disabledLabel.setAlignment(Qt.AlignCenter)
+        self.disabledLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.verticalLayout_6.addWidget(self.disabledLabel)
 
@@ -91,7 +91,7 @@ class Ui_MainWindow(object):
         self.disabledVideo.setObjectName(u"disabledVideo")
         sizePolicy.setHeightForWidth(self.disabledVideo.sizePolicy().hasHeightForWidth())
         self.disabledVideo.setSizePolicy(sizePolicy)
-        self.disabledVideo.setAlignment(Qt.AlignCenter)
+        self.disabledVideo.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.verticalLayout_6.addWidget(self.disabledVideo)
 
@@ -110,7 +110,7 @@ class Ui_MainWindow(object):
         self.enabledLabel.setSizePolicy(sizePolicy1)
         self.enabledLabel.setMaximumSize(QSize(16777215, 64))
         self.enabledLabel.setStyleSheet(u"background-color: rgb(115, 0, 10);")
-        self.enabledLabel.setAlignment(Qt.AlignCenter)
+        self.enabledLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.verticalLayout_7.addWidget(self.enabledLabel)
 
@@ -118,7 +118,7 @@ class Ui_MainWindow(object):
         self.enabledVideo.setObjectName(u"enabledVideo")
         sizePolicy.setHeightForWidth(self.enabledVideo.sizePolicy().hasHeightForWidth())
         self.enabledVideo.setSizePolicy(sizePolicy)
-        self.enabledVideo.setAlignment(Qt.AlignCenter)
+        self.enabledVideo.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.verticalLayout_7.addWidget(self.enabledVideo)
 
@@ -129,19 +129,26 @@ class Ui_MainWindow(object):
         self.frame.setObjectName(u"frame")
         sizePolicy.setHeightForWidth(self.frame.sizePolicy().hasHeightForWidth())
         self.frame.setSizePolicy(sizePolicy)
-        self.frame.setFrameShape(QFrame.NoFrame)
-        self.frame.setFrameShadow(QFrame.Raised)
+        self.frame.setFrameShape(QFrame.Shape.NoFrame)
+        self.frame.setFrameShadow(QFrame.Shadow.Raised)
         self.verticalLayout = QVBoxLayout(self.frame)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.label = QLabel(self.frame)
         self.label.setObjectName(u"label")
         self.label.setStyleSheet(u"background-color: rgb(115, 0, 10);")
-        self.label.setAlignment(Qt.AlignCenter)
+        self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.verticalLayout.addWidget(self.label)
 
         self.tabWidget = QTabWidget(self.frame)
         self.tabWidget.setObjectName(u"tabWidget")
+        self.tabWidget.setStyleSheet(u"color: rgb(255, 255, 255);\n"
+"font-weight: bold;\n"
+"font-size: 16px;")
+        self.tabWidget.setTabPosition(QTabWidget.TabPosition.South)
+        self.tabWidget.setTabShape(QTabWidget.TabShape.Rounded)
+        self.tabWidget.setDocumentMode(False)
+        self.tabWidget.setMovable(False)
         self.peakMemoryTab = PlotCanvas()
         self.peakMemoryTab.setObjectName(u"peakMemoryTab")
         self.gridLayout_4 = QGridLayout(self.peakMemoryTab)
@@ -175,13 +182,13 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"HiRISE Demo", None))
-        self.detectLabel.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><span style=\" font-size:24pt; font-weight:700;\">Face Detection</span></p></body></html>", None))
+        self.detectLabel.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><span style=\" font-size:24pt; font-weight:700; color:#ffffff;\">Face Detection</span></p></body></html>", None))
         self.detectVideo.setText("")
-        self.disabledLabel.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><span style=\" font-size:24pt; font-weight:700;\">HiRISE Disabled</span></p></body></html>", None))
+        self.disabledLabel.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><span style=\" font-size:24pt; font-weight:700; color:#ffffff;\">HiRISE Disabled</span></p></body></html>", None))
         self.disabledVideo.setText("")
-        self.enabledLabel.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><span style=\" font-size:24pt; font-weight:700;\">HiRISE Enabled</span></p></body></html>", None))
+        self.enabledLabel.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><span style=\" font-size:24pt; font-weight:700; color:#ffffff;\">HiRISE Enabled</span></p></body></html>", None))
         self.enabledVideo.setText("")
-        self.label.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><span style=\" font-size:24pt; font-weight:700;\">Realtime Statistics</span></p></body></html>", None))
+        self.label.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><span style=\" font-size:24pt; font-weight:700; color:#ffffff;\">Realtime Statistics</span></p></body></html>", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.peakMemoryTab), QCoreApplication.translate("MainWindow", u"Peak Memory", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.bandwidthTab), QCoreApplication.translate("MainWindow", u"Bandwidth", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.energyTab), QCoreApplication.translate("MainWindow", u"Energy", None))

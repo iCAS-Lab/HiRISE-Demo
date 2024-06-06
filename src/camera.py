@@ -3,6 +3,10 @@ from PySide6.QtCore import QSize, QTimer, Signal, Qt
 from PySide6.QtWidgets import QLabel
 from PySide6.QtGui import QImage, QPixmap
 
+# from ultralytics import YOLO
+
+################################################################################
+YOLO_MODEL_PATH = './models/face_det.pt'
 
 class Camera(QLabel):
 
@@ -13,6 +17,7 @@ class Camera(QLabel):
         QLabel.__init__(self)
         self.video_size = QSize(self.width(),self.height())
         self.setup_camera()
+        # self.yolo_person_model = YOLO(YOLO_MODEL_PATH)
 
     def setup_camera(self):
         """Initialize camera.
@@ -41,4 +46,7 @@ class Camera(QLabel):
         pixmap = QPixmap.fromImage(image)
         self.update_frame.emit(pixmap)
         self.update_plots.emit((1,1,1))
+
+    def detect(self):
+        pass
 

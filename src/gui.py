@@ -41,13 +41,11 @@ class MainWindow(QMainWindow):
         self.current_tab: PlotCanvas = self.ui.tabWidget.currentWidget()
         self.current_tab.axes.clear()
         self.plot_ref = None
-        print(self.current_tab)
         self.update_plots(self.current_plot_data)
 
     def update_plots(self, plot_data: tuple):
         self.current_plot_data = plot_data
         peak_memory, bandwidth, energy = plot_data
-        print(self.current_tab)
         self.ydata = np.concatenate((self.ydata[1:], np.random.randint(10, size=1)))
         if self.plot_ref is None:
             plot_refs = self.current_tab.axes.plot(self.xdata, self.ydata, 'r')
