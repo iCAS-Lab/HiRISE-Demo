@@ -7,6 +7,7 @@ from PySide6.QtGui import QImage, QPixmap
 class Camera(QLabel):
 
     update_frame = Signal(QPixmap)
+    update_plots = Signal(tuple)
 
     def __init__(self, parent):
         QLabel.__init__(self)
@@ -27,7 +28,7 @@ class Camera(QLabel):
 
         self.timer = QTimer()
         self.timer.timeout.connect(self.display_video_stream)
-        self.timer.start(1)
+        self.timer.start(30)
 
     def display_video_stream(self):
         """Read frame from camera and repaint QLabel widget.
@@ -39,3 +40,5 @@ class Camera(QLabel):
                        frame.strides[0], QImage.Format_RGB888)
         pixmap = QPixmap.fromImage(image)
         self.update_frame.emit(pixmap)
+        self.update_plots.emit((1,1,1))
+

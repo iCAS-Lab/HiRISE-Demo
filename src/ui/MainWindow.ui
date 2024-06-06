@@ -234,35 +234,23 @@
          <property name="currentIndex">
           <number>0</number>
          </property>
-         <widget class="QWidget" name="peakMemoryTab">
+         <widget class="PlotCanvas" name="peakMemoryTab">
           <attribute name="title">
            <string>Peak Memory</string>
           </attribute>
-          <layout class="QGridLayout" name="gridLayout_4">
-           <item row="0" column="0">
-            <widget class="PlotCanvas" name="peakMemoryWidget" native="true"/>
-           </item>
-          </layout>
+          <layout class="QGridLayout" name="gridLayout_4"/>
          </widget>
-         <widget class="QWidget" name="bandwidthTab">
+         <widget class="PlotCanvas" name="bandwidthTab">
           <attribute name="title">
            <string>Bandwidth</string>
           </attribute>
-          <layout class="QGridLayout" name="gridLayout_2">
-           <item row="0" column="0">
-            <widget class="PlotCanvas" name="bandwidthWidget" native="true"/>
-           </item>
-          </layout>
+          <layout class="QGridLayout" name="gridLayout_2"/>
          </widget>
-         <widget class="QWidget" name="energyTab">
+         <widget class="PlotCanvas" name="energyTab">
           <attribute name="title">
            <string>Energy</string>
           </attribute>
-          <layout class="QGridLayout" name="gridLayout_3">
-           <item row="0" column="0">
-            <widget class="PlotCanvas" name="energyWidget" native="true"/>
-           </item>
-          </layout>
+          <layout class="QGridLayout" name="gridLayout_3"/>
          </widget>
         </widget>
        </item>

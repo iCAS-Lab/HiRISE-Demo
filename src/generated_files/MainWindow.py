@@ -142,35 +142,20 @@ class Ui_MainWindow(object):
 
         self.tabWidget = QTabWidget(self.frame)
         self.tabWidget.setObjectName(u"tabWidget")
-        self.peakMemoryTab = QWidget()
+        self.peakMemoryTab = PlotCanvas()
         self.peakMemoryTab.setObjectName(u"peakMemoryTab")
         self.gridLayout_4 = QGridLayout(self.peakMemoryTab)
         self.gridLayout_4.setObjectName(u"gridLayout_4")
-        self.peakMemoryWidget = PlotCanvas(self.peakMemoryTab)
-        self.peakMemoryWidget.setObjectName(u"peakMemoryWidget")
-
-        self.gridLayout_4.addWidget(self.peakMemoryWidget, 0, 0, 1, 1)
-
         self.tabWidget.addTab(self.peakMemoryTab, "")
-        self.bandwidthTab = QWidget()
+        self.bandwidthTab = PlotCanvas()
         self.bandwidthTab.setObjectName(u"bandwidthTab")
         self.gridLayout_2 = QGridLayout(self.bandwidthTab)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.bandwidthWidget = PlotCanvas(self.bandwidthTab)
-        self.bandwidthWidget.setObjectName(u"bandwidthWidget")
-
-        self.gridLayout_2.addWidget(self.bandwidthWidget, 0, 0, 1, 1)
-
         self.tabWidget.addTab(self.bandwidthTab, "")
-        self.energyTab = QWidget()
+        self.energyTab = PlotCanvas()
         self.energyTab.setObjectName(u"energyTab")
         self.gridLayout_3 = QGridLayout(self.energyTab)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
-        self.energyWidget = PlotCanvas(self.energyTab)
-        self.energyWidget.setObjectName(u"energyWidget")
-
-        self.gridLayout_3.addWidget(self.energyWidget, 0, 0, 1, 1)
-
         self.tabWidget.addTab(self.energyTab, "")
 
         self.verticalLayout.addWidget(self.tabWidget)
