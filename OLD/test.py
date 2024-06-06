@@ -1,15 +1,15 @@
 from PySide6.QtCore import *
-from PySide6.QtWidgets import QWidget, QLabel, QPushButton, QVBoxLayout, QApplication, QGridLayout
+from PySide6.QtWidgets import QWidget, QLabel, QPushButton, QVBoxLayout, QApplication, QGridLayout, QFrame
 from PySide6.QtGui import *
 import cv2
 import sys
 import time
 
 
-class MainApp(QWidget):
+class MainApp(QFrame):
 
     def __init__(self):
-        QWidget.__init__(self)
+        QFrame.__init__(self)
         self.video_size = QSize(1920, 1080)
         self.setup_ui()
         self.setup_camera()
@@ -39,7 +39,7 @@ class MainApp(QWidget):
                          self.video_size.height())
         self.capture.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter.fourcc(
             'M', 'J', 'P', 'G'))  # depends on fourcc available camera
-        self.capture.set(cv2.CAP_PROP_FPS, 60)
+        self.capture.set(cv2.CAP_PROP_FPS, 30)
 
         self.timer = QTimer()
         self.timer.timeout.connect(self.display_video_stream)
