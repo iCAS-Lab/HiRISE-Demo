@@ -2,7 +2,6 @@
 https://www.pythonguis.com/tutorials/pyside6-plotting-matplotlib/
 """
 
-import cv2
 import numpy as np
 from PySide6.QtCore import QTimer, Qt
 from PySide6.QtGui import QImage, QPixmap
@@ -94,18 +93,24 @@ class MainWindow(QMainWindow):
             f'{np.random.random(): 0.3f}' for i in range(4)]
         self.peak_memory_stats.setText(
             'Peak Memory (Units):'
-            + f'\n\t> Baseline:\n\t{pm_now} (now) {pm_min} (min) {pm_max} (max) {pm_mean} (mean)\n'
-            + f'\t> HiRISE:\n\t{pm_now} (now) {pm_min} (min) {pm_max} (max) {pm_mean} (mean)'
+            + f'\n\t> Baseline:\n\t{pm_now} (now) {pm_min} (min) {pm_max} '
+            + f'(max) {pm_mean} (mean)\n'
+            + f'\t> HiRISE:\n\t{pm_now} (now) {pm_min} (min) {pm_max} (max) '
+            + f'{pm_mean} (mean)'
         )
         self.bandwidth_stats.setText(
             'Bandwidth (Units): '
-            + f'\n\t> Baseline:\n\t{band_now} (now) {band_min} (min) {band_max} (max) {band_mean} (mean)\n'
-            + f'\t> HiRISE:\n\t{band_now} (now) {band_min} (min) {band_max} (max) {band_mean} (mean)'
+            + f'\n\t> Baseline:\n\t{band_now} (now) {band_min} (min) '
+            + f'{band_max} (max) {band_mean} (mean)\n'
+            + f'\t> HiRISE:\n\t{band_now} (now) {band_min} (min) '
+            + f'{band_max} (max) {band_mean} (mean)'
         )
         self.energy_stats.setText(
             'Energy (Units): '
-            + f'\n\t> Baseline:\n\t{e_now} (now) {e_min} (min) {e_max} (max) {e_mean} (mean)\n'
-            + f'\t> HiRISE:\n\t{e_now} (now) {e_min} (min) {e_max} (max) {e_mean} (mean)'
+            + f'\n\t> Baseline:\n\t{e_now} (now) {e_min} (min) {e_max} (max) '
+            + f'{e_mean} (mean)\n'
+            + f'\t> HiRISE:\n\t{e_now} (now) {e_min} (min) {e_max} (max) '
+            + f'{e_mean} (mean)'
         )
 
     def update_plots(self, plot_data: tuple):
