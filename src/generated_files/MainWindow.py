@@ -15,9 +15,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QLabel,
-    QMainWindow, QSizePolicy, QTabWidget, QVBoxLayout,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QFormLayout, QFrame, QGridLayout,
+    QLabel, QMainWindow, QSizePolicy, QTabWidget,
+    QVBoxLayout, QWidget)
 
 from camera import Camera
 from plot import PlotCanvas
@@ -164,6 +164,16 @@ class Ui_MainWindow(object):
         self.gridLayout_3 = QGridLayout(self.energyTab)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
         self.tabWidget.addTab(self.energyTab, "")
+        self.summaryTab = QWidget()
+        self.summaryTab.setObjectName(u"summaryTab")
+        self.gridLayout_5 = QGridLayout(self.summaryTab)
+        self.gridLayout_5.setObjectName(u"gridLayout_5")
+        self.formLayout = QFormLayout()
+        self.formLayout.setObjectName(u"formLayout")
+
+        self.gridLayout_5.addLayout(self.formLayout, 0, 0, 1, 1)
+
+        self.tabWidget.addTab(self.summaryTab, "")
 
         self.verticalLayout.addWidget(self.tabWidget)
 
@@ -192,5 +202,6 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.peakMemoryTab), QCoreApplication.translate("MainWindow", u"Peak Memory", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.bandwidthTab), QCoreApplication.translate("MainWindow", u"Bandwidth", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.energyTab), QCoreApplication.translate("MainWindow", u"Energy", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.summaryTab), QCoreApplication.translate("MainWindow", u"Summary", None))
     # retranslateUi
 

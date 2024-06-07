@@ -269,6 +269,16 @@ font-size: 16px;</string>
           </attribute>
           <layout class="QGridLayout" name="gridLayout_3"/>
          </widget>
+         <widget class="QWidget" name="summaryTab">
+          <attribute name="title">
+           <string>Summary</string>
+          </attribute>
+          <layout class="QGridLayout" name="gridLayout_5">
+           <item row="0" column="0">
+            <layout class="QFormLayout" name="formLayout"/>
+           </item>
+          </layout>
+         </widget>
         </widget>
        </item>
       </layout>
