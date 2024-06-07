@@ -59,10 +59,9 @@ class MainWindow(QMainWindow):
         self.peak_memory_stats = QLabel('0.00')
         self.bandwidth_stats = QLabel('0.00')
         self.energy_stats = QLabel('0.00')
-        self.ui.formLayout.addRow(
-            'Peak Memory (Unit):', self.peak_memory_stats)
-        self.ui.formLayout.addRow('Bandwidth (Unit):', self.bandwidth_stats)
-        self.ui.formLayout.addRow('Energy (Unit):', self.energy_stats)
+        self.ui.formLayout.addRow(self.peak_memory_stats)
+        self.ui.formLayout.addRow(self.bandwidth_stats)
+        self.ui.formLayout.addRow(self.energy_stats)
         self.update_stats((0, 0, 0))
 
     def tab_changed(self):
@@ -88,19 +87,25 @@ class MainWindow(QMainWindow):
 
     def update_stats(self, stat_data: tuple = None):
         pm_now, pm_min, pm_max, pm_mean = [
-            np.random.randint(10) for i in range(4)]
+            f'{np.random.random(): 0.3f}' for i in range(4)]
         band_now, band_min, band_max, band_mean = [
-            np.random.randint(10) for i in range(4)]
+            f'{np.random.random(): 0.3f}' for i in range(4)]
         e_now, e_min, e_max, e_mean = [
-            np.random.randint(10)for i in range(4)]
+            f'{np.random.random(): 0.3f}' for i in range(4)]
         self.peak_memory_stats.setText(
-            f'\t{pm_now} (now)\n\t{pm_min} (min) {pm_max} (max) {pm_mean} (mean)\n'
+            'Peak Memory (Units):'
+            + f'\n\t> Baseline:\n\t{pm_now} (now) {pm_min} (min) {pm_max} (max) {pm_mean} (mean)\n'
+            + f'\t> HiRISE:\n\t{pm_now} (now) {pm_min} (min) {pm_max} (max) {pm_mean} (mean)'
         )
         self.bandwidth_stats.setText(
-            f'\t{band_now} (now)\n\t{band_min} (min) {band_max} (max) {band_mean} (mean)\n'
+            'Bandwidth (Units): '
+            + f'\n\t> Baseline:\n\t{band_now} (now) {band_min} (min) {band_max} (max) {band_mean} (mean)\n'
+            + f'\t> HiRISE:\n\t{band_now} (now) {band_min} (min) {band_max} (max) {band_mean} (mean)'
         )
         self.energy_stats.setText(
-            f'\t{e_now} (now)\n\t{e_min} (min) {e_max} (max) {e_mean} (mean)\n'
+            'Energy (Units): '
+            + f'\n\t> Baseline:\n\t{e_now} (now) {e_min} (min) {e_max} (max) {e_mean} (mean)\n'
+            + f'\t> HiRISE:\n\t{e_now} (now) {e_min} (min) {e_max} (max) {e_mean} (mean)'
         )
 
     def update_plots(self, plot_data: tuple):
