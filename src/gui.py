@@ -31,7 +31,8 @@ class MainWindow(QMainWindow):
         # Temporary data
         self.current_plot_data = (0, 0, 0)
         self.xdata = np.arange(50)
-        self.ydata = np.random.randint(10, size=50)
+        self.baseline_data = np.random.randint(10, size=50)
+        self.hirise_data = np.random.randint(10, size=50)
 
         # Scale contents to GUI, set False to preserve images quality
         self.ui.detectVideo.setScaledContents(True)
@@ -49,7 +50,8 @@ class MainWindow(QMainWindow):
         self.current_tab.axes.set_title(self.current_tab_name)
 
         # Data and plot info
-        self.plot_ref = None
+        self.plot_ref_baseline = None
+        self.plot_ref_hirise = None
 
         self.show()
 
@@ -73,7 +75,8 @@ class MainWindow(QMainWindow):
         else:
             self.summary = False
             self.current_tab.axes.clear()
-            self.plot_ref = None
+            self.plot_ref_baseline = None
+            self.plot_ref_hirise = None
             self.current_tab.axes.set_title(self.current_tab_name)
             self.update_plots(self.current_plot_data)
 
@@ -103,14 +106,24 @@ class MainWindow(QMainWindow):
     def update_plots(self, plot_data: tuple):
         self.current_plot_data = plot_data
         peak_memory, bandwidth, energy = plot_data
-        self.ydata = np.concatenate(
-            (self.ydata[1:], np.random.randint(10, size=1)))
-        if self.plot_ref is None:
-            plot_refs = self.current_tab.axes.plot(
-                self.xdata, self.ydata, 'r')
-            self.plot_ref = plot_refs[0]
+        # Temp data
+        self.baseline_data = np.concatenate(
+            (self.baseline_data[1:], np.random.randint(10, size=1)))
+        self.hirise_data = np.concatenate(
+            (self.hirise_data[1:], np.random.randint(10, size=1)))
+        # Check if plot ref is None
+        if self.plot_ref_baseline is None or self.plot_ref_hirise is None:
+            plot_ref_baseline = self.current_tab.axes.plot(
+                self.xdata, self.baseline_data, 'r'
+            )
+            plot_ref_hirise = self.current_tab.axes.plot(
+                self.xdata, self.hirise_data, 'b'
+            )
+            self.plot_ref_baseline = plot_ref_baseline[0]
+            self.plot_ref_hirise = plot_ref_hirise[0]
         else:
-            self.plot_ref.set_ydata(self.ydata)
+            self.plot_ref_baseline.set_ydata(self.baseline_data)
+            self.plot_ref_hirise.set_ydata(self.hirise_data)
         self.current_tab.draw()
         # self.energyTab.axes.plot([1,2,3], [1,2,3], 'r')
         # self.bandwidthTab.axes.plot([1,2,3], [1,2,3], 'r')
