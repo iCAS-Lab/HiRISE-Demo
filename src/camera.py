@@ -45,8 +45,8 @@ class Camera(QLabel):
         """
         res, frame = self.capture.read()
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        frame = cv2.flip(frame, 1)
         # Perform detection
+        detect, baseline, hirise = None, None, None
         detect, baseline, hirise, stats = self.hirise_call.detect(
             res, frame, self.tab)
         # Check that we have valid results
@@ -62,6 +62,7 @@ class Camera(QLabel):
             hirise_pm = QPixmap.fromImage(hirise_image)
         else:
             # Use default image otherwise
+            frame = cv2.resize(frame, (96, 96))
             image = QImage(frame, frame.shape[1], frame.shape[0],
                            frame.strides[0], QImage.Format.Format_RGB888)
             pixmap = QPixmap.fromImage(image)

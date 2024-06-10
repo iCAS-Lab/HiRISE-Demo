@@ -19,7 +19,7 @@ class HiRISE():
         pooled_img_w: int = 96,
         pooled_img_h: int = 96,
         model: str = './src/models/face_det.pt',
-        gray: bool = True,
+        gray: bool = False,
         basesz: tuple = (140, 140),
         bbox_margin: float = 0.1
     ):
@@ -105,7 +105,7 @@ class HiRISE():
             relative_w,
             relative_h,
             color=(0, 255, 0),
-            thickness=4
+            thickness=1
     ):
         """
         Draw a bounding box on an image based on relative coordinates.
@@ -179,25 +179,6 @@ class HiRISE():
             x -= w//2
             y -= h//2
         return image[y:y+h, x:x+w]
-        # np_image = image[y:y+h, x:x+w].copy()
-        # crop_region = QRect(x, y, w, h)
-        # if hirise:
-        #     try:
-        #         image = cv2.resize(
-        #             np_image,
-        #             (self.pooled_img_width, self.pooled_img_height)
-        #         )
-        #     except Exception as e:
-        #         return None
-        # # Start with the whole image
-        # q_image = QImage(
-        #     image,
-        #     image.shape[1],
-        #     image.shape[0],
-        #     QImage.Format.Format_RGB888
-        # )
-        # # Get only the rectangle
-        # return q_image.copy(crop_region), np_image
 
     def avg(self, running_avg, now):
         return running_avg
@@ -296,7 +277,7 @@ class HiRISE():
         if self.gray:
             frame_scaled = cv2.cvtColor(frame_scaled, cv2.COLOR_BGR2GRAY)
             frame_scaled = np.stack((frame_scaled,)*3, axis=-1)
-        detect_image = frame.copy()
+        detect_image = frame_scaled.copy()
         # Track the head
         head_results_hirise = self.person_model.track(
             frame_scaled,
@@ -363,19 +344,21 @@ class HiRISE():
                 zeros = np.zeros(head_image_baseline.shape, dtype=np.uint8)
                 np.copyto(zeros, head_image_baseline)
                 head_image_baseline = zeros
-                head_image_hirise = cv2.resize(
-                    head_image_hirise, (self.pooled_img_width, self.pooled_img_height))
+                try:
+                    head_image_hirise = cv2.resize(
+                        head_image_hirise, (self.pooled_img_width, self.pooled_img_height))
+                except Exception as e:
+                    return None, None, None, self.stats
                 # Update bandwidth
                 bandwidth_hirise += head_image_hirise.shape[0] * \
                     head_image_hirise.shape[0]*3
-            # Update our statistics
-            self.stats['baseline']['Energy']['now'] = 0.0
-            self.stats['hirise']['Energy']['now'] = 0.0
-            self.stats['baseline']['Bandwidth']['now'] = bandwidth_baseln
-            self.stats['hirise']['Bandwidth']['now'] = bandwidth_hirise
-            self.stats['baseline']['Peak Memory']['now'] = self.peak_img_sram_baseln
-            self.stats['hirise']['Peak Memory']['now'] = peak_img_sram_hirise
-            if tab == 'Summary':
-                self.update_stats()
-
+                # Update our statistics
+                self.stats['baseline']['Energy']['now'] = 0.0
+                self.stats['hirise']['Energy']['now'] = 0.0
+                self.stats['baseline']['Bandwidth']['now'] = bandwidth_baseln
+                self.stats['hirise']['Bandwidth']['now'] = bandwidth_hirise
+                self.stats['baseline']['Peak Memory']['now'] = self.peak_img_sram_baseln
+                self.stats['hirise']['Peak Memory']['now'] = peak_img_sram_hirise
+                if tab == 'Summary':
+                    self.update_stats()
         return detect_image, head_image_baseline, head_image_hirise, self.stats
