@@ -13,7 +13,7 @@ YOLO_MODEL_PATH = './src/models/face_det.pt'
 class Camera(QLabel):
 
     update_frame = Signal(tuple)
-    update_stats = Signal(tuple)
+    update_stats = Signal(dict)
 
     def __init__(self, parent):
         QLabel.__init__(self)
@@ -37,23 +37,35 @@ class Camera(QLabel):
         self.timer.timeout.connect(self.display_video_stream)
         self.timer.start(1)
 
+    def set_tab(self, new_tab: str):
+        self.tab = new_tab
+
     def display_video_stream(self):
         """Read frame from camera and repaint QLabel widget.
         """
         res, frame = self.capture.read()
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         frame = cv2.flip(frame, 1)
-        detect, baseline, hirise = self.hirise_call.detect(res, frame)
+        # Perform detection
+        detect, baseline, hirise, stats = self.hirise_call.detect(
+            res, frame, self.tab)
+        # Check that we have valid results
         if detect is not None and baseline is not None and hirise is not None:
             detect_image = QImage(detect, detect.shape[1], detect.shape[0],
                                   detect.strides[0], QImage.Format.Format_RGB888)
             detect_pm = QPixmap.fromImage(detect_image)
-            baseline_pm = QPixmap.fromImage(baseline)
-            hirise_pm = QPixmap.fromImage(hirise)
+            baseline_image = QImage(baseline, baseline.shape[1], baseline.shape[0],
+                                    baseline.strides[0], QImage.Format.Format_RGB888)
+            baseline_pm = QPixmap.fromImage(baseline_image)
+            hirise_image = QImage(hirise, hirise.shape[1], hirise.shape[0],
+                                  hirise.strides[0], QImage.Format.Format_RGB888)
+            hirise_pm = QPixmap.fromImage(hirise_image)
         else:
+            # Use default image otherwise
             image = QImage(frame, frame.shape[1], frame.shape[0],
-                           frame.strides[0], QImage.Format_RGB888)
+                           frame.strides[0], QImage.Format.Format_RGB888)
             pixmap = QPixmap.fromImage(image)
             detect_pm, baseline_pm, hirise_pm = (pixmap, pixmap, pixmap)
+        # Emit Signals to update GUI
         self.update_frame.emit((detect_pm, baseline_pm, hirise_pm))
-        self.update_stats.emit((1, 1, 1))
+        self.update_stats.emit(stats)

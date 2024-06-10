@@ -4,6 +4,7 @@
 import time
 import sys
 import cv2
+import copy
 import numpy as np
 import matplotlib.pyplot as plt
 from PySide6.QtGui import QImage
@@ -38,8 +39,6 @@ class HiRISE():
             self.pooled_img_width * self.pooled_img_height*self.nc
         )
         self.peak_img_sram_baseln = self.bw*self.bh*3
-        self.bandwidth_hirise = 0
-        self.bandwidth_baseln = 0
         self.avg_box_pixels_bl = 0
         self.avg_box_pixels_hr = 0
         self.num_frames = 0
@@ -50,6 +49,53 @@ class HiRISE():
         # Colors
         self.hirise_color = (141, 164, 78)
         self.baseline_color = (238, 147, 56)
+
+        # Setup Statistics Dictionary
+        self.stats = self.init_stats_dict()
+
+    def init_stats_dict(self):
+        return {
+            'baseline': {
+                'Peak Memory': {
+                    'now': 0.0,
+                    'min': np.inf,
+                    'max': -np.inf,
+                    'avg': 0.0
+                },
+                'Bandwidth': {
+                    'now': 0.0,
+                    'min': np.inf,
+                    'max': -np.inf,
+                    'avg': 0.0
+                },
+                'Energy': {
+                    'now': 0.0,
+                    'min': np.inf,
+                    'max': -np.inf,
+                    'avg': 0.0
+                }
+            },
+            'hirise': {
+                'Peak Memory': {
+                    'now': 0.0,
+                    'min': np.inf,
+                    'max': -np.inf,
+                    'avg': 0.0
+                },
+                'Bandwidth': {
+                    'now': 0.0,
+                    'min': np.inf,
+                    'max': -np.inf,
+                    'avg': 0.0
+                },
+                'Energy': {
+                    'now': 0.0,
+                    'min': np.inf,
+                    'max': -np.inf,
+                    'avg': 0.0
+                }
+            }
+        }
 
     def draw_bbox_on_image(
             self,
@@ -110,7 +156,6 @@ class HiRISE():
             relative_w,
             relative_h,
             center=False,
-            hirise=False
     ):
         """
         Crop an image based on relative coordinates.
@@ -133,16 +178,110 @@ class HiRISE():
         if center:
             x -= w//2
             y -= h//2
-        crop_region = QRect(x, y, w, h)
-        np_image = image[y:y+h, x:x+w]
-        if hirise:
-            np_image = cv2.resize(
-                np_image,
-                (self.pooled_img_width, self.pooled_img_height)
-            )
-        return QImage(image, image.shape[1], image.shape[0], QImage.Format.Format_RGB888).copy(crop_region), np_image
+        return image[y:y+h, x:x+w]
+        # np_image = image[y:y+h, x:x+w].copy()
+        # crop_region = QRect(x, y, w, h)
+        # if hirise:
+        #     try:
+        #         image = cv2.resize(
+        #             np_image,
+        #             (self.pooled_img_width, self.pooled_img_height)
+        #         )
+        #     except Exception as e:
+        #         return None
+        # # Start with the whole image
+        # q_image = QImage(
+        #     image,
+        #     image.shape[1],
+        #     image.shape[0],
+        #     QImage.Format.Format_RGB888
+        # )
+        # # Get only the rectangle
+        # return q_image.copy(crop_region), np_image
 
-    def detect(self, ret, frame):
+    def avg(self, running_avg, now):
+        return running_avg
+
+    def update_stats(self):
+        # Min computations
+        self.stats['baseline']['Energy']['min'] = min(
+            self.stats['baseline']['Energy']['min'],
+            self.stats['baseline']['Energy']['now']
+        )
+        self.stats['hirise']['Energy']['min'] = min(
+            self.stats['hirise']['Energy']['min'],
+            self.stats['hirise']['Energy']['now']
+        )
+        self.stats['baseline']['Bandwidth']['min'] = min(
+            self.stats['baseline']['Bandwidth']['min'],
+            self.stats['baseline']['Bandwidth']['now']
+        )
+        self.stats['hirise']['Bandwidth']['min'] = min(
+            self.stats['hirise']['Bandwidth']['min'],
+            self.stats['hirise']['Bandwidth']['now']
+        )
+        self.stats['baseline']['Peak Memory']['min'] = min(
+            self.stats['baseline']['Peak Memory']['min'],
+            self.stats['baseline']['Peak Memory']['now']
+        )
+        self.stats['hirise']['Peak Memory']['min'] = min(
+            self.stats['hirise']['Peak Memory']['min'],
+            self.stats['hirise']['Peak Memory']['now']
+        )
+        # Max computations
+        self.stats['baseline']['Energy']['max'] = max(
+            self.stats['baseline']['Energy']['max'],
+            self.stats['baseline']['Energy']['now']
+        )
+        self.stats['hirise']['Energy']['max'] = max(
+            self.stats['hirise']['Energy']['max'],
+            self.stats['hirise']['Energy']['now']
+        )
+        self.stats['baseline']['Bandwidth']['max'] = max(
+            self.stats['baseline']['Bandwidth']['max'],
+            self.stats['baseline']['Bandwidth']['now']
+        )
+        self.stats['hirise']['Bandwidth']['max'] = max(
+            self.stats['hirise']['Bandwidth']['max'],
+            self.stats['hirise']['Bandwidth']['now']
+        )
+        self.stats['baseline']['Peak Memory']['max'] = max(
+            self.stats['baseline']['Peak Memory']['max'],
+            self.stats['baseline']['Peak Memory']['now']
+        )
+        self.stats['hirise']['Peak Memory']['max'] = max(
+            self.stats['hirise']['Peak Memory']['max'],
+            self.stats['hirise']['Peak Memory']['now']
+        )
+        # Average Computations
+        self.stats['baseline']['Energy']['avg'] = self.avg(
+            self.stats['baseline']['Energy']['avg'],
+            self.stats['baseline']['Energy']['now']
+        )
+        self.stats['hirise']['Energy']['avg'] = self.avg(
+            self.stats['hirise']['Energy']['avg'],
+            self.stats['hirise']['Energy']['now']
+        )
+        self.stats['baseline']['Bandwidth']['avg'] = self.avg(
+            self.stats['baseline']['Bandwidth']['avg'],
+            self.stats['baseline']['Bandwidth']['now']
+        )
+        self.stats['hirise']['Bandwidth']['avg'] = self.avg(
+            self.stats['hirise']['Bandwidth']['avg'],
+            self.stats['hirise']['Bandwidth']['now']
+        )
+        self.stats['baseline']['Peak Memory']['avg'] = self.avg(
+            self.stats['baseline']['Peak Memory']['avg'],
+            self.stats['baseline']['Peak Memory']['now']
+        )
+        self.stats['hirise']['Peak Memory']['avg'] = self.avg(
+            self.stats['hirise']['Peak Memory']['avg'],
+            self.stats['hirise']['Peak Memory']['now']
+        )
+
+    def detect(self, ret, frame, tab):
+        bandwidth_baseln = 0.0
+        bandwidth_hirise = 0.0
         head_image_baseline = None
         head_image_hirise = None
         detect_image = None
@@ -172,11 +311,10 @@ class HiRISE():
         x, y, w, h = 0, 0, 0, 0
 
         # Bandwidth computations
-        self.bandwidth_hirise += (
-            self.pooled_img_width *
-            self.pooled_img_height*self.nc
+        bandwidth_baseln += self.bw*self.bh*3
+        bandwidth_hirise += (
+            self.pooled_img_width * self.pooled_img_height * self.nc
         )
-        self.bandwidth_baseln += self.bw*self.bh*3
         # If we detected head boxes then iterate through
         if len(head_results_hirise[0].boxes) > 0:
             for j, headbox in reversed(
@@ -204,28 +342,40 @@ class HiRISE():
                     hh,
                     color=self.hirise_color if j == 0 else self.baseline_color
                 )
-                head_image_hirise, np_hirise = self.crop_image_by_relative_coords(
+                # Returns a resized QImage and Numpy Array
+                head_image_hirise = self.crop_image_by_relative_coords(
                     frame,
                     x+hx-w/2,
                     y+hy-h/2,
                     hw,
                     hh,
                     center=True,
-                    hirise=True
                 )
-                head_image_baseline, np_baseline = self.crop_image_by_relative_coords(
+                # Returns a QImage and Numpy Array
+                head_image_baseline = self.crop_image_by_relative_coords(
                     frame_scaled,
                     x+hx-w/2,
                     y+hy-h/2,
                     hw,
                     hh,
                     center=True,
-                    hirise=False
                 )
-                self.bandwidth_hirise += np_hirise.shape[0] * \
-                    np_hirise.shape[0]*3
-                self.avg_box_pixels_bl += np_baseline.shape[0] * \
-                    np_baseline.shape[0]*3
-                self.avg_box_pixels_hr += np_hirise.shape[0] * \
-                    np_hirise.shape[0]*3
-        return detect_image, head_image_baseline, head_image_hirise
+                zeros = np.zeros(head_image_baseline.shape, dtype=np.uint8)
+                np.copyto(zeros, head_image_baseline)
+                head_image_baseline = zeros
+                head_image_hirise = cv2.resize(
+                    head_image_hirise, (self.pooled_img_width, self.pooled_img_height))
+                # Update bandwidth
+                bandwidth_hirise += head_image_hirise.shape[0] * \
+                    head_image_hirise.shape[0]*3
+            # Update our statistics
+            self.stats['baseline']['Energy']['now'] = 0.0
+            self.stats['hirise']['Energy']['now'] = 0.0
+            self.stats['baseline']['Bandwidth']['now'] = bandwidth_baseln
+            self.stats['hirise']['Bandwidth']['now'] = bandwidth_hirise
+            self.stats['baseline']['Peak Memory']['now'] = self.peak_img_sram_baseln
+            self.stats['hirise']['Peak Memory']['now'] = peak_img_sram_hirise
+            if tab == 'Summary':
+                self.update_stats()
+
+        return detect_image, head_image_baseline, head_image_hirise, self.stats
