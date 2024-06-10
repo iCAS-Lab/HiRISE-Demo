@@ -1,7 +1,10 @@
 import cv2
+import numpy as np
+import matplotlib.pyplot as plt
 from PySide6.QtCore import QSize, QTimer, Signal, Qt
 from PySide6.QtWidgets import QLabel
 from PySide6.QtGui import QImage, QPixmap
+from hirise import HiRISE
 
 ################################################################################
 YOLO_MODEL_PATH = './src/models/face_det.pt'
@@ -9,13 +12,14 @@ YOLO_MODEL_PATH = './src/models/face_det.pt'
 
 class Camera(QLabel):
 
-    update_frame = Signal(QPixmap)
+    update_frame = Signal(tuple)
     update_stats = Signal(tuple)
 
     def __init__(self, parent):
         QLabel.__init__(self)
         self.video_size = QSize(self.width(), self.height())
         self.setup_camera()
+        self.hirise_call = HiRISE()
 
     def setup_camera(self):
         """Initialize camera.
@@ -39,8 +43,25 @@ class Camera(QLabel):
         res, frame = self.capture.read()
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         frame = cv2.flip(frame, 1)
-        image = QImage(frame, frame.shape[1], frame.shape[0],
-                       frame.strides[0], QImage.Format_RGB888)
-        pixmap = QPixmap.fromImage(image)
-        self.update_frame.emit(pixmap)
+        detect, baseline, hirise = self.hirise_call.detect(res, frame)
+        if detect is not None and baseline is not None and hirise is not None:
+            detect_image = QImage(detect, detect.shape[1], detect.shape[0],
+                                  detect.strides[0], QImage.Format.Format_RGB888)
+            detect_pm = QPixmap.fromImage(detect_image)
+            # baseline: np.ndarray
+            # newarr = np.zeros(baseline.shape, dtype=np.uint8)
+            # np.copyto(baseline, newarr)
+            # plt.imsave('newarray.png', newarr)
+            # baseline_image = QImage(newarr, baseline.shape[1], baseline.shape[0],
+            #                         detect.strides[0], QImage.Format.Format_RGB888)
+            baseline_pm = QPixmap.fromImage(baseline)
+            hirise = QImage(hirise, hirise.shape[1], hirise.shape[0],
+                            hirise.strides[0], QImage.Format.Format_RGB888)
+            hirise_pm = QPixmap.fromImage(hirise)
+        else:
+            image = QImage(frame, frame.shape[1], frame.shape[0],
+                           frame.strides[0], QImage.Format_RGB888)
+            pixmap = QPixmap.fromImage(image)
+            detect_pm, baseline_pm, hirise_pm = (pixmap, pixmap, pixmap)
+        self.update_frame.emit((detect_pm, baseline_pm, hirise_pm))
         self.update_stats.emit((1, 1, 1))

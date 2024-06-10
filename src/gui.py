@@ -142,14 +142,15 @@ class MainWindow(QMainWindow):
         # self.bandwidthTab.draw()
         # self.peakMemoryTab.draw()
 
-    def update_cameras(self, pixmap: QPixmap):
-        self.pixmap = pixmap
+    def update_cameras(self, pixmaps: tuple):
+        detect_pm, baseline_pm, hirise_pm = pixmaps
+        self.pixmap = detect_pm
         disabledVideoSize = self.ui.disabledVideo.size()
         enabledVideoSize = self.ui.enabledVideo.size()
         detectVideoSize = self.ui.detectVideo.size()
-        self.ui.disabledVideo.setPixmap(pixmap.scaled(
-            disabledVideoSize, Qt.AspectRatioMode.KeepAspectRatio))
-        self.ui.enabledVideo.setPixmap(pixmap.scaled(
-            enabledVideoSize, Qt.AspectRatioMode.KeepAspectRatio))
-        self.ui.detectVideo.setPixmap(pixmap.scaled(
+        self.ui.detectVideo.setPixmap(detect_pm.scaled(
             detectVideoSize, Qt.AspectRatioMode.KeepAspectRatio))
+        self.ui.disabledVideo.setPixmap(baseline_pm.scaled(
+            disabledVideoSize, Qt.AspectRatioMode.KeepAspectRatio))
+        self.ui.enabledVideo.setPixmap(hirise_pm.scaled(
+            enabledVideoSize, Qt.AspectRatioMode.KeepAspectRatio))
