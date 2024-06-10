@@ -48,15 +48,7 @@ class Camera(QLabel):
             detect_image = QImage(detect, detect.shape[1], detect.shape[0],
                                   detect.strides[0], QImage.Format.Format_RGB888)
             detect_pm = QPixmap.fromImage(detect_image)
-            # baseline: np.ndarray
-            # newarr = np.zeros(baseline.shape, dtype=np.uint8)
-            # np.copyto(baseline, newarr)
-            # plt.imsave('newarray.png', newarr)
-            # baseline_image = QImage(newarr, baseline.shape[1], baseline.shape[0],
-            #                         detect.strides[0], QImage.Format.Format_RGB888)
             baseline_pm = QPixmap.fromImage(baseline)
-            hirise = QImage(hirise, hirise.shape[1], hirise.shape[0],
-                            hirise.strides[0], QImage.Format.Format_RGB888)
             hirise_pm = QPixmap.fromImage(hirise)
         else:
             image = QImage(frame, frame.shape[1], frame.shape[0],

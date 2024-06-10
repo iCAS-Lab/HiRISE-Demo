@@ -109,7 +109,8 @@ class HiRISE():
             relative_y,
             relative_w,
             relative_h,
-            center=False
+            center=False,
+            hirise=False
     ):
         """
         Crop an image based on relative coordinates.
@@ -133,7 +134,13 @@ class HiRISE():
             x -= w//2
             y -= h//2
         crop_region = QRect(x, y, w, h)
-        return QImage(image, image.shape[1], image.shape[0], QImage.Format.Format_RGB888).copy(crop_region), image[y:y+h, x:x+w]
+        np_image = image[y:y+h, x:x+w]
+        if hirise:
+            np_image = cv2.resize(
+                np_image,
+                (self.pooled_img_width, self.pooled_img_height)
+            )
+        return QImage(image, image.shape[1], image.shape[0], QImage.Format.Format_RGB888).copy(crop_region), np_image
 
     def detect(self, ret, frame):
         head_image_baseline = None
@@ -203,7 +210,8 @@ class HiRISE():
                     y+hy-h/2,
                     hw,
                     hh,
-                    center=True
+                    center=True,
+                    hirise=True
                 )
                 head_image_baseline, np_baseline = self.crop_image_by_relative_coords(
                     frame_scaled,
@@ -211,11 +219,8 @@ class HiRISE():
                     y+hy-h/2,
                     hw,
                     hh,
-                    center=True
-                )
-                head_image_hirise = cv2.resize(
-                    np_hirise,
-                    (self.pooled_img_width, self.pooled_img_height)
+                    center=True,
+                    hirise=False
                 )
                 self.bandwidth_hirise += np_hirise.shape[0] * \
                     np_hirise.shape[0]*3
