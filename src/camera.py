@@ -45,6 +45,7 @@ class Camera(QLabel):
         """
         res, frame = self.capture.read()
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        frame = cv2.flip(frame, 1)
         # Perform detection
         detect, baseline, hirise = None, None, None
         detect, baseline, hirise, stats = self.hirise_call.detect(
@@ -60,13 +61,13 @@ class Camera(QLabel):
             hirise_image = QImage(hirise, hirise.shape[1], hirise.shape[0],
                                   hirise.strides[0], QImage.Format.Format_RGB888)
             hirise_pm = QPixmap.fromImage(hirise_image)
-        else:
-            # Use default image otherwise
-            frame = cv2.resize(frame, (96, 96))
-            image = QImage(frame, frame.shape[1], frame.shape[0],
-                           frame.strides[0], QImage.Format.Format_RGB888)
-            pixmap = QPixmap.fromImage(image)
-            detect_pm, baseline_pm, hirise_pm = (pixmap, pixmap, pixmap)
+            self.update_frame.emit((detect_pm, baseline_pm, hirise_pm))
+            self.update_stats.emit(stats)
+        # else:
+        #     # Use default image otherwise
+        #     frame = cv2.resize(frame, (96, 96))
+        #     image = QImage(frame, frame.shape[1], frame.shape[0],
+        #                    frame.strides[0], QImage.Format.Format_RGB888)
+        #     pixmap = QPixmap.fromImage(image)
+        #     detect_pm, baseline_pm, hirise_pm = (pixmap, pixmap, pixmap)
         # Emit Signals to update GUI
-        self.update_frame.emit((detect_pm, baseline_pm, hirise_pm))
-        self.update_stats.emit(stats)

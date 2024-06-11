@@ -18,7 +18,8 @@ class HiRISE():
         self,
         pooled_img_w: int = 96,
         pooled_img_h: int = 96,
-        model: str = './src/models/face_det.pt',
+        # model: str = './src/models/face_det.pt',
+        model: str = './src/models/face_det_full_integer_quant_edgetpu.tflite',
         gray: bool = False,
         basesz: tuple = (140, 140),
         bbox_margin: float = 0.1
@@ -44,7 +45,7 @@ class HiRISE():
         self.num_frames = 0
 
         # YOLO Model
-        self.person_model = YOLO(self.model)
+        self.person_model = YOLO(self.model, task='detect')
 
         # Colors
         self.hirise_color = (141, 164, 78)
@@ -263,6 +264,9 @@ class HiRISE():
     def detect(self, ret, frame, tab):
         bandwidth_baseln = 0.0
         bandwidth_hirise = 0.0
+        peak_img_sram_hirise = (self.pooled_img_width *
+                                self.pooled_img_height*self.nc)  # HiRISE
+        peak_img_sram_baseln = self.bw*self.bh*3
         head_image_baseline = None
         head_image_hirise = None
         detect_image = None

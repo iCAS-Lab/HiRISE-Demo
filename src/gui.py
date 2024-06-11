@@ -54,8 +54,7 @@ class MainWindow(QMainWindow):
 
         # Set Camera tab
         self.ui.detectVideo.set_tab(self.current_tab_name)
-
-        self.show()
+        self.showFullScreen()
 
     def make_summary_ui(self):
         self.peak_memory_stats = QLabel('0.00')
@@ -177,6 +176,7 @@ class MainWindow(QMainWindow):
         else:
             self.plot_ref_baseline.set_ydata(self.baseline_data)
             self.plot_ref_hirise.set_ydata(self.hirise_data)
+        self.current_tab.axes.set_yscale('log')
         self.current_tab.axes.legend(['Baseline', 'HiRISE'])
         self.current_tab.draw()
 
