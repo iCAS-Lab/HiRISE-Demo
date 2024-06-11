@@ -1,0 +1,99 @@
+Ultralytics YOLOv8.2.31 🚀 Python-3.10.14 torch-2.2.2 CPU (Intel Core(TM) i7-9700 3.00GHz)
+Model summary (fused): 168 layers, 3006038 parameters, 0 gradients, 8.1 GFLOPs
+
+[34m[1mPyTorch:[0m starting from 'face_det.pt' with input shape (1, 3, 96, 96) BCHW and output shape(s) (1, 6, 189) (5.9 MB)
+
+[34m[1mTensorFlow SavedModel:[0m starting export with tensorflow 2.16.1...
+Downloading https://github.com/ultralytics/assets/releases/download/v8.2.0/calibration_image_sample_data_20x128x128x3_float32.npy.zip to 'calibration_image_sample_data_20x128x128x3_float32.npy.zip'...
+  0%|          | 0.00/1.11M [00:00<?, ?B/s] 28%|██▊       | 320k/1.11M [00:00<00:00, 3.17MB/s]100%|██████████| 1.11M/1.11M [00:00<00:00, 8.05MB/s]
+Unzipping calibration_image_sample_data_20x128x128x3_float32.npy.zip to /usr/src/ultralytics/NEW/calibration_image_sample_data_20x128x128x3_float32.npy...:   0%|          | 0/1 [00:00<?, ?file/s]Unzipping calibration_image_sample_data_20x128x128x3_float32.npy.zip to /usr/src/ultralytics/NEW/calibration_image_sample_data_20x128x128x3_float32.npy...: 100%|██████████| 1/1 [00:00<00:00, 29.81file/s]
+
+[34m[1mONNX:[0m starting export with onnx 1.16.1 opset 17...
+[34m[1mONNX:[0m slimming with onnxslim 0.1.28...
+[34m[1mONNX:[0m export success ✅ 0.9s, saved as 'face_det.onnx' (11.5 MB)
+[34m[1mTensorFlow SavedModel:[0m starting TFLite export with onnx2tf 1.22.3...
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+W0000 00:00:1718140473.062224     228 tf_tfl_flatbuffer_helpers.cc:390] Ignored output_format.
+W0000 00:00:1718140473.062264     228 tf_tfl_flatbuffer_helpers.cc:393] Ignored drop_control_dependency.
+W0000 00:00:1718140473.940183     228 tf_tfl_flatbuffer_helpers.cc:390] Ignored output_format.
+W0000 00:00:1718140473.940211     228 tf_tfl_flatbuffer_helpers.cc:393] Ignored drop_control_dependency.
+W0000 00:00:1718140474.679446     228 tf_tfl_flatbuffer_helpers.cc:390] Ignored output_format.
+W0000 00:00:1718140474.679474     228 tf_tfl_flatbuffer_helpers.cc:393] Ignored drop_control_dependency.
+W0000 00:00:1718140476.258135     228 tf_tfl_flatbuffer_helpers.cc:390] Ignored output_format.
+W0000 00:00:1718140476.258161     228 tf_tfl_flatbuffer_helpers.cc:393] Ignored drop_control_dependency.
+fully_quantize: 0, inference_type: 6, input_inference_type: FLOAT32, output_inference_type: FLOAT32
+W0000 00:00:1718140477.911055     228 tf_tfl_flatbuffer_helpers.cc:390] Ignored output_format.
+W0000 00:00:1718140477.911084     228 tf_tfl_flatbuffer_helpers.cc:393] Ignored drop_control_dependency.
+fully_quantize: 0, inference_type: 6, input_inference_type: INT8, output_inference_type: INT8
+W0000 00:00:1718140479.275176     228 tf_tfl_flatbuffer_helpers.cc:390] Ignored output_format.
+W0000 00:00:1718140479.275201     228 tf_tfl_flatbuffer_helpers.cc:393] Ignored drop_control_dependency.
+W0000 00:00:1718140480.713932     228 tf_tfl_flatbuffer_helpers.cc:390] Ignored output_format.
+W0000 00:00:1718140480.713957     228 tf_tfl_flatbuffer_helpers.cc:393] Ignored drop_control_dependency.
+
+[07mAutomatic generation of each OP name started[0m ========================================
+[32mAutomatic generation of each OP name complete![0m
+
+[07mModel loaded[0m ========================================================================
+
+[07mModel conversion started[0m ============================================================
+[07msaved_model output started[0m ==========================================================
+[32msaved_model output complete![0m
+[32mFloat32 tflite output complete![0m
+[32mFloat16 tflite output complete![0m
+[32mDynamic Range Quantization tflite output complete![0m
+[34mInput signature information for quantization[0m
+[34msignature_name[0m: serving_default
+[34minput_name.0[0m: images [34mshape[0m: (1, 96, 96, 3) [34mdtype[0m: <dtype: 'float32'>
+[32mINT8 Quantization tflite output complete![0m
+[32mFull INT8 Quantization tflite output complete![0m
+[32mINT8 Quantization with int16 activations tflite output complete![0m
+[32mFull INT8 Quantization with int16 activations tflite output complete![0m
+[34m[1mTensorFlow SavedModel:[0m export success ✅ 36.3s, saved as 'face_det_saved_model' (38.1 MB)
+[34m[1mEdge TPU:[0m WARNING ⚠️ Edge TPU known bug https://github.com/ultralytics/ultralytics/issues/1185
+
+[34m[1mEdge TPU:[0m starting export with Edge TPU compiler 16.0.384591198...
+[34m[1mEdge TPU:[0m running 'edgetpu_compiler -s -d -k 10 --out_dir "face_det_saved_model" "face_det_saved_model/face_det_full_integer_quant.tflite"'
+Edge TPU Compiler version 16.0.384591198
+Searching for valid delegate with step 10
+Try to compile segment with 255 ops
+Started a compilation timeout timer of 180 seconds.
+
+Model compiled successfully in 1293 ms.
+
+Input model: face_det_saved_model/face_det_full_integer_quant.tflite
+Input size: 2.95MiB
+Output model: face_det_saved_model/face_det_full_integer_quant_edgetpu.tflite
+Output size: 3.65MiB
+On-chip memory used for caching model parameters: 3.33MiB
+On-chip memory remaining for caching model parameters: 4.44MiB
+Off-chip memory used for streaming uncached model parameters: 1.12KiB
+Number of Edge TPU subgraphs: 1
+Total number of operations: 255
+Operation log: face_det_saved_model/face_det_full_integer_quant_edgetpu.log
+
+Operator                       Count      Status
+
+PAD                            7          Mapped to Edge TPU
+MAX_POOL_2D                    3          Mapped to Edge TPU
+ADD                            8          Mapped to Edge TPU
+MUL                            59         Mapped to Edge TPU
+LOGISTIC                       58         Mapped to Edge TPU
+TRANSPOSE                      4          Mapped to Edge TPU
+SUB                            2          Mapped to Edge TPU
+RESHAPE                        6          Mapped to Edge TPU
+CONCATENATION                  18         Mapped to Edge TPU
+STRIDED_SLICE                  20         Mapped to Edge TPU
+SOFTMAX                        1          Mapped to Edge TPU
+CONV_2D                        64         Mapped to Edge TPU
+QUANTIZE                       3          Mapped to Edge TPU
+RESIZE_NEAREST_NEIGHBOR        2          Mapped to Edge TPU
+Compilation child process completed within timeout period.
+Compilation succeeded! 
+[34m[1mEdge TPU:[0m export success ✅ 1.4s, saved as 'face_det_saved_model/face_det_full_integer_quant_edgetpu.tflite' (3.7 MB)
+
+Export complete (39.1s)
+Results saved to [1m/usr/src/ultralytics/NEW[0m
+Predict:         yolo predict task=detect model=face_det_saved_model/face_det_full_integer_quant_edgetpu.tflite imgsz=96 int8 
+Validate:        yolo val task=detect model=face_det_saved_model/face_det_full_integer_quant_edgetpu.tflite imgsz=96 data=/data/breidy/multi-res-cam/datasets/crowdhuman/crowdhuman_digital_grayscale240p/dataset.yaml int8 
+Visualize:       https://netron.app
+💡 Learn more at https://docs.ultralytics.com/modes/export
