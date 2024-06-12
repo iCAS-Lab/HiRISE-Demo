@@ -16,8 +16,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QFormLayout, QFrame, QGridLayout,
-    QLabel, QMainWindow, QSizePolicy, QTabWidget,
-    QVBoxLayout, QWidget)
+    QLabel, QMainWindow, QSizePolicy, QSlider,
+    QSpinBox, QTabWidget, QVBoxLayout, QWidget)
 
 from camera import Camera
 from plot import PlotCanvas
@@ -26,14 +26,14 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1129, 800)
+        MainWindow.resize(1200, 887)
         sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
         MainWindow.setSizePolicy(sizePolicy)
         MainWindow.setStyleSheet(u"background-color: rgb(92, 92, 92);")
-        MainWindow.setTabShape(QTabWidget.TabShape.Rounded)
+        MainWindow.setTabShape(QTabWidget.Rounded)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         sizePolicy.setHeightForWidth(self.centralwidget.sizePolicy().hasHeightForWidth())
@@ -56,7 +56,7 @@ class Ui_MainWindow(object):
         self.detectLabel.setSizePolicy(sizePolicy1)
         self.detectLabel.setMaximumSize(QSize(16777215, 64))
         self.detectLabel.setStyleSheet(u"background-color: rgb(115, 0, 10);")
-        self.detectLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.detectLabel.setAlignment(Qt.AlignCenter)
 
         self.verticalLayout_8.addWidget(self.detectLabel)
 
@@ -64,7 +64,7 @@ class Ui_MainWindow(object):
         self.detectVideo.setObjectName(u"detectVideo")
         sizePolicy.setHeightForWidth(self.detectVideo.sizePolicy().hasHeightForWidth())
         self.detectVideo.setSizePolicy(sizePolicy)
-        self.detectVideo.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.detectVideo.setAlignment(Qt.AlignCenter)
 
         self.verticalLayout_8.addWidget(self.detectVideo)
 
@@ -83,7 +83,7 @@ class Ui_MainWindow(object):
         self.disabledLabel.setSizePolicy(sizePolicy1)
         self.disabledLabel.setMaximumSize(QSize(16777215, 64))
         self.disabledLabel.setStyleSheet(u"background-color: rgb(115, 0, 10);")
-        self.disabledLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.disabledLabel.setAlignment(Qt.AlignCenter)
 
         self.verticalLayout_6.addWidget(self.disabledLabel)
 
@@ -91,7 +91,7 @@ class Ui_MainWindow(object):
         self.disabledVideo.setObjectName(u"disabledVideo")
         sizePolicy.setHeightForWidth(self.disabledVideo.sizePolicy().hasHeightForWidth())
         self.disabledVideo.setSizePolicy(sizePolicy)
-        self.disabledVideo.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.disabledVideo.setAlignment(Qt.AlignCenter)
 
         self.verticalLayout_6.addWidget(self.disabledVideo)
 
@@ -110,7 +110,7 @@ class Ui_MainWindow(object):
         self.enabledLabel.setSizePolicy(sizePolicy1)
         self.enabledLabel.setMaximumSize(QSize(16777215, 64))
         self.enabledLabel.setStyleSheet(u"background-color: rgb(115, 0, 10);")
-        self.enabledLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.enabledLabel.setAlignment(Qt.AlignCenter)
 
         self.verticalLayout_7.addWidget(self.enabledLabel)
 
@@ -118,7 +118,7 @@ class Ui_MainWindow(object):
         self.enabledVideo.setObjectName(u"enabledVideo")
         sizePolicy.setHeightForWidth(self.enabledVideo.sizePolicy().hasHeightForWidth())
         self.enabledVideo.setSizePolicy(sizePolicy)
-        self.enabledVideo.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.enabledVideo.setAlignment(Qt.AlignCenter)
 
         self.verticalLayout_7.addWidget(self.enabledVideo)
 
@@ -129,14 +129,14 @@ class Ui_MainWindow(object):
         self.frame.setObjectName(u"frame")
         sizePolicy.setHeightForWidth(self.frame.sizePolicy().hasHeightForWidth())
         self.frame.setSizePolicy(sizePolicy)
-        self.frame.setFrameShape(QFrame.Shape.NoFrame)
-        self.frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.frame.setFrameShape(QFrame.NoFrame)
+        self.frame.setFrameShadow(QFrame.Raised)
         self.verticalLayout = QVBoxLayout(self.frame)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.label = QLabel(self.frame)
         self.label.setObjectName(u"label")
         self.label.setStyleSheet(u"background-color: rgb(115, 0, 10);")
-        self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.label.setAlignment(Qt.AlignCenter)
 
         self.verticalLayout.addWidget(self.label)
 
@@ -145,8 +145,8 @@ class Ui_MainWindow(object):
         self.tabWidget.setStyleSheet(u"color: rgb(255, 255, 255);\n"
 "font-weight: bold;\n"
 "font-size: 16px;")
-        self.tabWidget.setTabPosition(QTabWidget.TabPosition.South)
-        self.tabWidget.setTabShape(QTabWidget.TabShape.Rounded)
+        self.tabWidget.setTabPosition(QTabWidget.South)
+        self.tabWidget.setTabShape(QTabWidget.Rounded)
         self.tabWidget.setDocumentMode(False)
         self.tabWidget.setMovable(False)
         self.peakMemoryTab = PlotCanvas()
@@ -174,6 +174,102 @@ class Ui_MainWindow(object):
         self.gridLayout_5.addLayout(self.formLayout, 0, 0, 1, 1)
 
         self.tabWidget.addTab(self.summaryTab, "")
+        self.settingsTab = QWidget()
+        self.settingsTab.setObjectName(u"settingsTab")
+        self.formLayout_3 = QFormLayout(self.settingsTab)
+        self.formLayout_3.setObjectName(u"formLayout_3")
+        self.gridLayout_6 = QGridLayout()
+        self.gridLayout_6.setObjectName(u"gridLayout_6")
+        self.resolutionLabel = QLabel(self.settingsTab)
+        self.resolutionLabel.setObjectName(u"resolutionLabel")
+        sizePolicy2 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(1)
+        sizePolicy2.setHeightForWidth(self.resolutionLabel.sizePolicy().hasHeightForWidth())
+        self.resolutionLabel.setSizePolicy(sizePolicy2)
+
+        self.gridLayout_6.addWidget(self.resolutionLabel, 2, 0, 1, 1)
+
+        self.boundingBoxIndexLabel = QLabel(self.settingsTab)
+        self.boundingBoxIndexLabel.setObjectName(u"boundingBoxIndexLabel")
+        sizePolicy3 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(1)
+        sizePolicy3.setHeightForWidth(self.boundingBoxIndexLabel.sizePolicy().hasHeightForWidth())
+        self.boundingBoxIndexLabel.setSizePolicy(sizePolicy3)
+
+        self.gridLayout_6.addWidget(self.boundingBoxIndexLabel, 3, 0, 1, 1)
+
+        self.indexValue = QLabel(self.settingsTab)
+        self.indexValue.setObjectName(u"indexValue")
+
+        self.gridLayout_6.addWidget(self.indexValue, 3, 2, 1, 1)
+
+        self.boundBoxIndex = QSpinBox(self.settingsTab)
+        self.boundBoxIndex.setObjectName(u"boundBoxIndex")
+        sizePolicy4 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(1)
+        sizePolicy4.setHeightForWidth(self.boundBoxIndex.sizePolicy().hasHeightForWidth())
+        self.boundBoxIndex.setSizePolicy(sizePolicy4)
+
+        self.gridLayout_6.addWidget(self.boundBoxIndex, 3, 1, 1, 1)
+
+        self.poolValue = QLabel(self.settingsTab)
+        self.poolValue.setObjectName(u"poolValue")
+
+        self.gridLayout_6.addWidget(self.poolValue, 0, 2, 1, 1)
+
+        self.poolingSizeLabel = QLabel(self.settingsTab)
+        self.poolingSizeLabel.setObjectName(u"poolingSizeLabel")
+        sizePolicy3.setHeightForWidth(self.poolingSizeLabel.sizePolicy().hasHeightForWidth())
+        self.poolingSizeLabel.setSizePolicy(sizePolicy3)
+
+        self.gridLayout_6.addWidget(self.poolingSizeLabel, 0, 0, 1, 1)
+
+        self.resolutionValue = QLabel(self.settingsTab)
+        self.resolutionValue.setObjectName(u"resolutionValue")
+
+        self.gridLayout_6.addWidget(self.resolutionValue, 2, 2, 1, 1)
+
+        self.resolutionSlider = QSlider(self.settingsTab)
+        self.resolutionSlider.setObjectName(u"resolutionSlider")
+        sizePolicy5 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        sizePolicy5.setHorizontalStretch(0)
+        sizePolicy5.setVerticalStretch(1)
+        sizePolicy5.setHeightForWidth(self.resolutionSlider.sizePolicy().hasHeightForWidth())
+        self.resolutionSlider.setSizePolicy(sizePolicy5)
+        self.resolutionSlider.setMinimum(0)
+        self.resolutionSlider.setMaximum(6)
+        self.resolutionSlider.setSingleStep(1)
+        self.resolutionSlider.setPageStep(1)
+        self.resolutionSlider.setValue(1)
+        self.resolutionSlider.setSliderPosition(1)
+        self.resolutionSlider.setOrientation(Qt.Horizontal)
+        self.resolutionSlider.setTickPosition(QSlider.TicksBelow)
+        self.resolutionSlider.setTickInterval(1)
+
+        self.gridLayout_6.addWidget(self.resolutionSlider, 2, 1, 1, 1)
+
+        self.poolingSlider = QSlider(self.settingsTab)
+        self.poolingSlider.setObjectName(u"poolingSlider")
+        sizePolicy5.setHeightForWidth(self.poolingSlider.sizePolicy().hasHeightForWidth())
+        self.poolingSlider.setSizePolicy(sizePolicy5)
+        self.poolingSlider.setMinimum(0)
+        self.poolingSlider.setMaximum(11)
+        self.poolingSlider.setSingleStep(1)
+        self.poolingSlider.setPageStep(1)
+        self.poolingSlider.setValue(5)
+        self.poolingSlider.setOrientation(Qt.Horizontal)
+        self.poolingSlider.setTickPosition(QSlider.TicksBelow)
+        self.poolingSlider.setTickInterval(1)
+
+        self.gridLayout_6.addWidget(self.poolingSlider, 0, 1, 1, 1)
+
+
+        self.formLayout_3.setLayout(0, QFormLayout.FieldRole, self.gridLayout_6)
+
+        self.tabWidget.addTab(self.settingsTab, "")
 
         self.verticalLayout.addWidget(self.tabWidget)
 
@@ -184,7 +280,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(4)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -203,5 +299,12 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.bandwidthTab), QCoreApplication.translate("MainWindow", u"Bandwidth", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.latencyTab), QCoreApplication.translate("MainWindow", u"Latency", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.summaryTab), QCoreApplication.translate("MainWindow", u"Summary", None))
+        self.resolutionLabel.setText(QCoreApplication.translate("MainWindow", u"Resolution", None))
+        self.boundingBoxIndexLabel.setText(QCoreApplication.translate("MainWindow", u"Person Index", None))
+        self.indexValue.setText(QCoreApplication.translate("MainWindow", u"Value:", None))
+        self.poolValue.setText(QCoreApplication.translate("MainWindow", u"Value:", None))
+        self.poolingSizeLabel.setText(QCoreApplication.translate("MainWindow", u"Pooling Size", None))
+        self.resolutionValue.setText(QCoreApplication.translate("MainWindow", u"Value:", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.settingsTab), QCoreApplication.translate("MainWindow", u"Settings", None))
     # retranslateUi
 

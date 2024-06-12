@@ -208,7 +208,6 @@ class HiRISE():
         return running_total
 
     def update_stats(self):
-        print(self.stats['hirise']['Latency'])
         self.stats['hirise']['Latency']['fps_now'] = (
             1000 / self.stats['hirise']['Latency']['now']
         )
@@ -282,8 +281,6 @@ class HiRISE():
         detect_image = None
         # Resize the frame
         frame = cv2.resize(frame, self.camera_image_size)
-        # Increment frame counter
-        self.num_frames += 1
         # Scale the frame
         frame_scaled = cv2.resize(
             frame, (self.pooled_img_width, self.pooled_img_height))
@@ -371,9 +368,10 @@ class HiRISE():
             self.stats['hirise']['Bandwidth']['now'] = bandwidth_hirise
             self.stats['hirise']['Peak Memory']['now'] = peak_img_sram_hirise
             if tab == 'Summary':
+                # Increment frame counter for average calculations
+                self.num_frames += 1
                 self.update_stats()
         # Reset to prevent overflow when running for long durations
-        print(self.num_frames)
         if self.num_frames > 1000:
             print(f'LOG --> RESET FRAME COUNTER...')
             self.num_frames = 0

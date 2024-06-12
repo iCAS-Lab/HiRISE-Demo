@@ -1,4 +1,5 @@
 import cv2
+import time
 import numpy as np
 import matplotlib.pyplot as plt
 from PySide6.QtCore import QSize, QTimer, Signal, Qt
@@ -43,6 +44,7 @@ class Camera(QLabel):
     def display_video_stream(self):
         """Read frame from camera and repaint QLabel widget.
         """
+        # print(f'Reading Frame: {time.time()}')
         res, frame = self.capture.read()
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         frame = cv2.flip(frame, 1)
@@ -61,6 +63,7 @@ class Camera(QLabel):
             hirise_image = QImage(hirise, hirise.shape[1], hirise.shape[0],
                                   hirise.strides[0], QImage.Format.Format_RGB888)
             hirise_pm = QPixmap.fromImage(hirise_image)
+            # print(f'Sending Update: {time.time()}')
             self.update_frame.emit((detect_pm, baseline_pm, hirise_pm))
             self.update_stats.emit(stats)
         # else:

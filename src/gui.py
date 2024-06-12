@@ -2,6 +2,7 @@
 https://www.pythonguis.com/tutorials/pyside6-plotting-matplotlib/
 """
 
+import time
 import numpy as np
 from PySide6.QtCore import QTimer, Qt
 from PySide6.QtGui import QImage, QPixmap
@@ -46,8 +47,7 @@ class MainWindow(QMainWindow):
         self.current_tab: PlotCanvas = self.ui.tabWidget.currentWidget()
         self.current_tab_name = self.ui.tabWidget.tabText(
             self.ui.tabWidget.currentIndex())
-        self.summary = False
-        self.current_tab.axes.set_title(self.current_tab_name)
+        self.tab_changed()
 
         # Data and plot info
         self.plot_ref_baseline = None
@@ -76,11 +76,11 @@ class MainWindow(QMainWindow):
         self.current_tab_name = self.ui.tabWidget.tabText(
             self.ui.tabWidget.currentIndex())
         self.ui.detectVideo.set_tab(self.current_tab_name)
-        if self.current_tab_name == 'Summary':
-            self.summary = True
+        if self.current_tab_name == 'Settings':
+            pass
+        elif self.current_tab_name == 'Summary':
             self.update_stats(self.current_plot_data)
         else:
-            self.summary = False
             self.current_tab.axes.clear()
             self.plot_ref_baseline = None
             self.plot_ref_baseline_c = None
@@ -89,8 +89,11 @@ class MainWindow(QMainWindow):
             self.update_plots(self.current_plot_data)
 
     def update_tab(self, data: dict):
-        if self.current_tab_name != 'Summary':
-            self.update_plots(data)
+        if self.current_tab_name == 'Settings':
+            pass
+        elif self.current_tab_name == 'Summary':
+            self.update_stats(data)
+        else:
             # Set legends
             if self.current_tab_name != 'Latency':
                 self.current_tab.axes.legend(
@@ -104,8 +107,7 @@ class MainWindow(QMainWindow):
             self.current_tab.axes.set_xlabel(
                 'Samples'
             )
-        else:
-            self.update_stats(data)
+            self.update_plots(data)
 
     def update_stats(self, stats: dict):
         if stats is None:
@@ -231,6 +233,7 @@ class MainWindow(QMainWindow):
         self.current_tab.draw()
 
     def update_cameras(self, pixmaps: tuple):
+        # print(f'Received Frame: {time.time()}')
         detect_pm, baseline_pm, hirise_pm = pixmaps
         self.pixmap = detect_pm
         disabledVideoSize = self.ui.disabledVideo.size()
@@ -242,3 +245,4 @@ class MainWindow(QMainWindow):
             disabledVideoSize, Qt.AspectRatioMode.KeepAspectRatio))
         self.ui.enabledVideo.setPixmap(hirise_pm.scaled(
             enabledVideoSize, Qt.AspectRatioMode.KeepAspectRatio))
+        # print(f'Done Time: {time.time()}')
