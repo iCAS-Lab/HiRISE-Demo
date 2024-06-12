@@ -36,7 +36,7 @@ class HiRISE():
         self.hx, self.hy, self.hw, self.hh = 0, 0, 0.1, 0.1
 
         # HiRISE
-        self.peak_img_sram_hirise = (
+        self.peak_img_sram_hirise = float(
             self.pooled_img_width * self.pooled_img_height*self.nc
         )
         self.peak_img_sram_baseln = self.bw*self.bh*3
@@ -51,6 +51,20 @@ class HiRISE():
         self.hirise_color = (141, 164, 78)
         self.baseline_color = (238, 147, 56)
 
+        # Original Image Size
+        self.camera_image_size = (640, 480)
+
+        # Constant Baseline Computations
+        self.bandwidth_baseln = float(self.camera_image_size[0] *
+                                      self.camera_image_size[1] * 3)
+        self.c_bandwidth_baseln = self.bw*self.bh*3.0
+
+        # Running Values for averaging
+        self.total_latency = 0.0
+        self.total_fps = 0.0
+        self.total_hirise_bandwidth = 0.0
+        self.total_hirise_peak_memory = 0.0
+
         # Setup Statistics Dictionary
         self.stats = self.init_stats_dict()
 
@@ -61,19 +75,21 @@ class HiRISE():
                     'now': 0.0,
                     'min': np.inf,
                     'max': -np.inf,
-                    'avg': 0.0
+                    'avg': 0.0,
+                    'c_now': 0.0,
+                    'c_min': np.inf,
+                    'c_max': -np.inf,
+                    'c_avg': 0.0
                 },
                 'Bandwidth': {
-                    'now': 0.0,
-                    'min': np.inf,
-                    'max': -np.inf,
-                    'avg': 0.0
-                },
-                'Energy': {
-                    'now': 0.0,
-                    'min': np.inf,
-                    'max': -np.inf,
-                    'avg': 0.0
+                    'now': self.bandwidth_baseln,
+                    'min': self.bandwidth_baseln,
+                    'max': self.bandwidth_baseln,
+                    'avg': self.bandwidth_baseln,
+                    'c_now': self.c_bandwidth_baseln,
+                    'c_min': self.c_bandwidth_baseln,
+                    'c_max': self.c_bandwidth_baseln,
+                    'c_avg': self.c_bandwidth_baseln
                 }
             },
             'hirise': {
@@ -81,19 +97,26 @@ class HiRISE():
                     'now': 0.0,
                     'min': np.inf,
                     'max': -np.inf,
-                    'avg': 0.0
+                    'avg': 0.0,
+                    'units': 'Units'
                 },
                 'Bandwidth': {
                     'now': 0.0,
                     'min': np.inf,
                     'max': -np.inf,
-                    'avg': 0.0
+                    'avg': 0.0,
+                    'units': 'Units'
                 },
-                'Energy': {
+                'Latency': {
                     'now': 0.0,
                     'min': np.inf,
                     'max': -np.inf,
-                    'avg': 0.0
+                    'avg': 0.0,
+                    'fps_now': 0.0,
+                    'fps_min': np.inf,
+                    'fps_max': -np.inf,
+                    'fps_avg': 0.0,
+                    'units': 'milliseconds'
                 }
             }
         }
@@ -181,22 +204,22 @@ class HiRISE():
             y -= h//2
         return image[y:y+h, x:x+w]
 
-    def avg(self, running_avg, now):
-        return running_avg
+    def avg(self, running_total, now):
+        return running_total
 
     def update_stats(self):
+        print(self.stats['hirise']['Latency'])
+        self.stats['hirise']['Latency']['fps_now'] = (
+            1000 / self.stats['hirise']['Latency']['now']
+        )
         # Min computations
-        self.stats['baseline']['Energy']['min'] = min(
-            self.stats['baseline']['Energy']['min'],
-            self.stats['baseline']['Energy']['now']
+        self.stats['hirise']['Latency']['min'] = min(
+            self.stats['hirise']['Latency']['min'],
+            self.stats['hirise']['Latency']['now']
         )
-        self.stats['hirise']['Energy']['min'] = min(
-            self.stats['hirise']['Energy']['min'],
-            self.stats['hirise']['Energy']['now']
-        )
-        self.stats['baseline']['Bandwidth']['min'] = min(
-            self.stats['baseline']['Bandwidth']['min'],
-            self.stats['baseline']['Bandwidth']['now']
+        self.stats['hirise']['Latency']['fps_min'] = min(
+            self.stats['hirise']['Latency']['fps_min'],
+            self.stats['hirise']['Latency']['fps_now']
         )
         self.stats['hirise']['Bandwidth']['min'] = min(
             self.stats['hirise']['Bandwidth']['min'],
@@ -211,17 +234,13 @@ class HiRISE():
             self.stats['hirise']['Peak Memory']['now']
         )
         # Max computations
-        self.stats['baseline']['Energy']['max'] = max(
-            self.stats['baseline']['Energy']['max'],
-            self.stats['baseline']['Energy']['now']
+        self.stats['hirise']['Latency']['max'] = max(
+            self.stats['hirise']['Latency']['max'],
+            self.stats['hirise']['Latency']['now']
         )
-        self.stats['hirise']['Energy']['max'] = max(
-            self.stats['hirise']['Energy']['max'],
-            self.stats['hirise']['Energy']['now']
-        )
-        self.stats['baseline']['Bandwidth']['max'] = max(
-            self.stats['baseline']['Bandwidth']['max'],
-            self.stats['baseline']['Bandwidth']['now']
+        self.stats['hirise']['Latency']['fps_max'] = max(
+            self.stats['hirise']['Latency']['fps_max'],
+            self.stats['hirise']['Latency']['fps_now']
         )
         self.stats['hirise']['Bandwidth']['max'] = max(
             self.stats['hirise']['Bandwidth']['max'],
@@ -236,33 +255,24 @@ class HiRISE():
             self.stats['hirise']['Peak Memory']['now']
         )
         # Average Computations
-        self.stats['baseline']['Energy']['avg'] = self.avg(
-            self.stats['baseline']['Energy']['avg'],
-            self.stats['baseline']['Energy']['now']
+        self.total_latency += self.stats['hirise']['Latency']['now']
+        self.total_fps += self.stats['hirise']['Latency']['fps_now']
+        self.total_hirise_peak_memory += self.stats['hirise']['Peak Memory']['now']
+        self.total_hirise_bandwidth += self.stats['hirise']['Bandwidth']['now']
+        self.stats['hirise']['Latency']['avg'] = (
+            self.total_latency / self.num_frames
         )
-        self.stats['hirise']['Energy']['avg'] = self.avg(
-            self.stats['hirise']['Energy']['avg'],
-            self.stats['hirise']['Energy']['now']
+        self.stats['hirise']['Latency']['fps_avg'] = (
+            self.total_fps / self.num_frames
         )
-        self.stats['baseline']['Bandwidth']['avg'] = self.avg(
-            self.stats['baseline']['Bandwidth']['avg'],
-            self.stats['baseline']['Bandwidth']['now']
+        self.stats['hirise']['Peak Memory']['avg'] = (
+            self.total_hirise_peak_memory / self.num_frames
         )
-        self.stats['hirise']['Bandwidth']['avg'] = self.avg(
-            self.stats['hirise']['Bandwidth']['avg'],
-            self.stats['hirise']['Bandwidth']['now']
-        )
-        self.stats['baseline']['Peak Memory']['avg'] = self.avg(
-            self.stats['baseline']['Peak Memory']['avg'],
-            self.stats['baseline']['Peak Memory']['now']
-        )
-        self.stats['hirise']['Peak Memory']['avg'] = self.avg(
-            self.stats['hirise']['Peak Memory']['avg'],
-            self.stats['hirise']['Peak Memory']['now']
+        self.stats['hirise']['Bandwidth']['avg'] = (
+            self.total_hirise_bandwidth / self.num_frames
         )
 
     def detect(self, ret, frame, tab):
-        bandwidth_baseln = 0.0
         bandwidth_hirise = 0.0
         peak_img_sram_hirise = (self.pooled_img_width *
                                 self.pooled_img_height*self.nc)  # HiRISE
@@ -271,7 +281,7 @@ class HiRISE():
         head_image_hirise = None
         detect_image = None
         # Resize the frame
-        frame = cv2.resize(frame, (640, 480))
+        frame = cv2.resize(frame, self.camera_image_size)
         # Increment frame counter
         self.num_frames += 1
         # Scale the frame
@@ -291,12 +301,12 @@ class HiRISE():
             tracker="botsort.yaml",
             imgsz=self.pooled_img_width
         )
+        latency = np.sum(list(head_results_hirise[0].speed.values()))
         # Scale image
         frame_scaled = cv2.resize(frame, (self.bw, self.bh))
         x, y, w, h = 0, 0, 0, 0
 
         # Bandwidth computations
-        bandwidth_baseln += self.bw*self.bh*3
         bandwidth_hirise += (
             self.pooled_img_width * self.pooled_img_height * self.nc
         )
@@ -317,7 +327,7 @@ class HiRISE():
 
                 # Turn them into a list
                 hx, hy, hw, hh = list(head_relative_xywh)
-                peak_img_sram_hirise = max(self.peak_img_sram_hirise, hw*hh*3)
+                peak_img_sram_hirise = max(self.peak_img_sram_hirise, hw*hh*3.0)
 
                 self.draw_bbox_on_image(
                     detect_image,
@@ -348,21 +358,27 @@ class HiRISE():
                 zeros = np.zeros(head_image_baseline.shape, dtype=np.uint8)
                 np.copyto(zeros, head_image_baseline)
                 head_image_baseline = zeros
+                # Update bandwidth
+                bandwidth_hirise += head_image_hirise.shape[0] * \
+                    head_image_hirise.shape[1]*3
                 try:
                     head_image_hirise = cv2.resize(
                         head_image_hirise, (self.pooled_img_width, self.pooled_img_height))
                 except Exception as e:
                     return None, None, None, self.stats
-                # Update bandwidth
-                bandwidth_hirise += head_image_hirise.shape[0] * \
-                    head_image_hirise.shape[0]*3
-                # Update our statistics
-                self.stats['baseline']['Energy']['now'] = 0.0
-                self.stats['hirise']['Energy']['now'] = 0.0
-                self.stats['baseline']['Bandwidth']['now'] = bandwidth_baseln
-                self.stats['hirise']['Bandwidth']['now'] = bandwidth_hirise
-                self.stats['baseline']['Peak Memory']['now'] = self.peak_img_sram_baseln
-                self.stats['hirise']['Peak Memory']['now'] = peak_img_sram_hirise
-                if tab == 'Summary':
-                    self.update_stats()
+            # Update our statistics
+            self.stats['hirise']['Latency']['now'] = latency
+            self.stats['hirise']['Bandwidth']['now'] = bandwidth_hirise
+            self.stats['hirise']['Peak Memory']['now'] = peak_img_sram_hirise
+            if tab == 'Summary':
+                self.update_stats()
+        # Reset to prevent overflow when running for long durations
+        print(self.num_frames)
+        if self.num_frames > 1000:
+            print(f'LOG --> RESET FRAME COUNTER...')
+            self.num_frames = 0
+            self.total_hirise_bandwidth = 0.0
+            self.total_hirise_peak_memory = 0.0
+            self.total_latency = 0.0
+            self.total_fps = 0.0
         return detect_image, head_image_baseline, head_image_hirise, self.stats

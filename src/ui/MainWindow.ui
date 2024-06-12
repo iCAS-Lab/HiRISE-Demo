@@ -263,9 +263,9 @@ font-size: 16px;</string>
           </attribute>
           <layout class="QGridLayout" name="gridLayout_2"/>
          </widget>
-         <widget class="PlotCanvas" name="energyTab">
+         <widget class="PlotCanvas" name="latencyTab">
           <attribute name="title">
-           <string>Energy</string>
+           <string>Latency</string>
           </attribute>
           <layout class="QGridLayout" name="gridLayout_3"/>
          </widget>

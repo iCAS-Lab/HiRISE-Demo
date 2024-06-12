@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'MainWindow.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.7.1
+## Created by: Qt User Interface Compiler version 6.6.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -27,7 +27,7 @@ class Ui_MainWindow(object):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(1129, 800)
-        sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
@@ -49,7 +49,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_8.setObjectName(u"verticalLayout_8")
         self.detectLabel = QLabel(self.detect)
         self.detectLabel.setObjectName(u"detectLabel")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Maximum)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.detectLabel.sizePolicy().hasHeightForWidth())
@@ -159,11 +159,11 @@ class Ui_MainWindow(object):
         self.gridLayout_2 = QGridLayout(self.bandwidthTab)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
         self.tabWidget.addTab(self.bandwidthTab, "")
-        self.energyTab = PlotCanvas()
-        self.energyTab.setObjectName(u"energyTab")
-        self.gridLayout_3 = QGridLayout(self.energyTab)
+        self.latencyTab = PlotCanvas()
+        self.latencyTab.setObjectName(u"latencyTab")
+        self.gridLayout_3 = QGridLayout(self.latencyTab)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
-        self.tabWidget.addTab(self.energyTab, "")
+        self.tabWidget.addTab(self.latencyTab, "")
         self.summaryTab = QWidget()
         self.summaryTab.setObjectName(u"summaryTab")
         self.gridLayout_5 = QGridLayout(self.summaryTab)
@@ -201,7 +201,7 @@ class Ui_MainWindow(object):
         self.label.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><span style=\" font-size:24pt; font-weight:700; color:#ffffff;\">Realtime Statistics</span></p></body></html>", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.peakMemoryTab), QCoreApplication.translate("MainWindow", u"Peak Memory", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.bandwidthTab), QCoreApplication.translate("MainWindow", u"Bandwidth", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.energyTab), QCoreApplication.translate("MainWindow", u"Energy", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.latencyTab), QCoreApplication.translate("MainWindow", u"Latency", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.summaryTab), QCoreApplication.translate("MainWindow", u"Summary", None))
     # retranslateUi
 
