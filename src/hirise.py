@@ -95,7 +95,6 @@ class HiRISE(QObject):
         self.init_stats_dict()
 
     def reset_values(self):
-        self.init_stats_dict()
         self.bandwidth_baseln = float(self.camera_image_size[0] *
                                       self.camera_image_size[1] * 3)
         self.c_bandwidth_baseln = self.bw*self.bh*3.0
@@ -103,6 +102,7 @@ class HiRISE(QObject):
             self.pooled_img_width * self.pooled_img_height*self.nc
         )
         self.peak_img_sram_baseln = self.bw*self.bh*3
+        self.init_stats_dict()
 
     def change_resolution(self, new_resolution: int):
         self.camera_image_size = self.resolutions[new_resolution]
