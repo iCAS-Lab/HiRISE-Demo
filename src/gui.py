@@ -21,9 +21,7 @@ class MainWindow(QMainWindow):
         self.make_summary_ui()
 
         # Connect signals to slots
-        self.ui.detectVideo.update_frame.connect(self.update_cameras)
-        self.ui.detectVideo.update_stats.connect(self.update_tab)
-        self.ui.tabWidget.currentChanged.connect(self.tab_changed)
+        self.connect_signals()
 
         # Temp pixmap
         self.pixmap = QPixmap()
@@ -57,6 +55,45 @@ class MainWindow(QMainWindow):
         # Set Camera tab
         self.ui.detectVideo.set_tab(self.current_tab_name)
         self.showFullScreen()
+
+    def connect_signals(self):
+        self.ui.detectVideo.update_frame.connect(self.update_cameras)
+        self.ui.detectVideo.update_stats.connect(self.update_tab)
+        self.ui.tabWidget.currentChanged.connect(self.tab_changed)
+        self.ui.poolingSlider.valueChanged.connect(self.pooling_changed)
+        self.ui.resolutionSlider.valueChanged.connect(self.resolution_changed)
+        self.ui.nextFace.clicked.connect(self.next_face)
+        self.ui.previousFace.clicked.connect(self.previous_face)
+        self.ui.resetFace.clicked.connect(self.reset_face)
+
+    def next_face(self):
+        if self.ui.detectVideo.hirise.focus_number < self.ui.detectVideo.hirise.num_heads - 1:
+            self.ui.detectVideo.hirise.focus_number += 1
+
+    def previous_face(self):
+        if self.ui.detectVideo.hirise.focus_number >= self.ui.detectVideo.hirise.num_heads - 1:
+            self.ui.detectVideo.hirise.focus_number -= 1
+
+    def reset_face(self):
+        self.ui.detectVideo.hirise.focus_number = 0
+
+    def pooling_changed(self):
+        pooling_id = self.ui.poolingSlider.value()
+        new_pooling = self.ui.detectVideo.hirise.change_pooling(pooling_id)
+        self.ui.poolValue.setText(f'Value: {new_pooling}')
+        self.baseline_data = np.zeros((50,))
+        self.baseline_data_c = np.zeros((50,))
+        self.hirise_data = np.zeros((50,))
+
+    def resolution_changed(self):
+        resolution_id = self.ui.resolutionSlider.value()
+        new_resolution = self.ui.detectVideo.hirise.change_resolution(
+            resolution_id
+        )
+        self.ui.resolutionValue.setText(f'Value: {new_resolution}')
+        self.baseline_data = np.zeros((50,))
+        self.baseline_data_c = np.zeros((50,))
+        self.hirise_data = np.zeros((50,))
 
     def make_summary_ui(self):
         self.peak_memory_stats = QLabel('0.00')

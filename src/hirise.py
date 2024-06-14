@@ -4,11 +4,8 @@
 import time
 import sys
 import cv2
-import copy
 import numpy as np
-import matplotlib.pyplot as plt
-from PySide6.QtGui import QImage
-from PySide6.QtCore import QRect
+from PySide6.QtCore import Signal
 from ultralytics import YOLO
 ################################################################################
 
@@ -54,6 +51,27 @@ class HiRISE():
         # Original Image Size
         self.camera_image_size = (640, 480)
 
+        self.resolutions = {
+            0: (640, 360),
+            1: (640, 480),
+            2: (800, 600),
+            3: (960, 540),
+            4: (960, 720),
+            5: (1024, 576),
+            6: (1280, 720),
+            7: (1280, 960),
+            8: (1920, 1080),
+            9: (2560, 1440),
+            10: (3840, 2160)
+        }
+        self.pooling_sizes = {
+            0: 32,
+            1: 64,
+            2: 96,
+            3: 128,
+            4: 160,
+        }
+
         # Constant Baseline Computations
         self.bandwidth_baseln = float(self.camera_image_size[0] *
                                       self.camera_image_size[1] * 3)
@@ -65,11 +83,39 @@ class HiRISE():
         self.total_hirise_bandwidth = 0.0
         self.total_hirise_peak_memory = 0.0
 
+        # Focus
+        self.focus_number = 0
+        self.num_heads = 0
+
         # Setup Statistics Dictionary
-        self.stats = self.init_stats_dict()
+        self.init_stats_dict()
+
+    def reset_values(self):
+        self.init_stats_dict()
+        self.bandwidth_baseln = float(self.camera_image_size[0] *
+                                      self.camera_image_size[1] * 3)
+        self.c_bandwidth_baseln = self.bw*self.bh*3.0
+        self.peak_img_sram_hirise = float(
+            self.pooled_img_width * self.pooled_img_height*self.nc
+        )
+        self.peak_img_sram_baseln = self.bw*self.bh*3
+
+    def change_resolution(self, new_resolution: int):
+        self.camera_image_size = self.resolutions[new_resolution]
+        self.reset_values()
+        return self.camera_image_size
+
+    def change_pooling(self, new_pool: int):
+        self.pooled_img_height = self.pooling_sizes[new_pool]
+        self.pooled_img_width = self.pooling_sizes[new_pool]
+        self.reset_values()
+        return self.pooled_img_width
+
+    def change_id(new_id: int):
+        pass
 
     def init_stats_dict(self):
-        return {
+        self.stats = {
             'baseline': {
                 'Peak Memory': {
                     'now': 0.0,
@@ -291,13 +337,15 @@ class HiRISE():
         detect_image = frame_scaled.copy()
         # Track the head
         head_results_hirise = self.person_model.track(
-            frame_scaled,
+            cv2.resize(frame_scaled, (96, 96)),
             verbose=False,
             persist=True,
             classes=[1],
             tracker="botsort.yaml",
-            imgsz=self.pooled_img_width
+            imgsz=96
         )
+        self.num_heads = len(head_results_hirise[0].boxes.id)
+        print(self.num_heads)
         latency = np.sum(list(head_results_hirise[0].speed.values()))
         # Scale image
         frame_scaled = cv2.resize(frame, (self.bw, self.bh))
@@ -363,6 +411,10 @@ class HiRISE():
                         head_image_hirise, (self.pooled_img_width, self.pooled_img_height))
                 except Exception as e:
                     return None, None, None, self.stats
+                # Set the head to focus on if there are multiple
+                if j == self.focus_number:
+                    self.focus_head_hirise = head_image_hirise
+                    self.focus_head_baseline = head_image_baseline
             # Update our statistics
             self.stats['hirise']['Latency']['now'] = latency
             self.stats['hirise']['Bandwidth']['now'] = bandwidth_hirise
@@ -379,4 +431,4 @@ class HiRISE():
             self.total_hirise_peak_memory = 0.0
             self.total_latency = 0.0
             self.total_fps = 0.0
-        return detect_image, head_image_baseline, head_image_hirise, self.stats
+        return detect_image, self.focus_head_baseline, self.focus_head_hirise, self.stats

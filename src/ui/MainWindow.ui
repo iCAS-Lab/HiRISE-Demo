@@ -286,76 +286,6 @@ font-size: 16px;</string>
           <layout class="QFormLayout" name="formLayout_3">
            <item row="0" column="1">
             <layout class="QGridLayout" name="gridLayout_6">
-             <item row="2" column="0">
-              <widget class="QLabel" name="resolutionLabel">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>1</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>Resolution</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="0">
-              <widget class="QLabel" name="boundingBoxIndexLabel">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>1</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>Person Index</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="2">
-              <widget class="QLabel" name="indexValue">
-               <property name="text">
-                <string>Value:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="1">
-              <widget class="QSpinBox" name="boundBoxIndex">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>1</verstretch>
-                </sizepolicy>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="2">
-              <widget class="QLabel" name="poolValue">
-               <property name="text">
-                <string>Value:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0">
-              <widget class="QLabel" name="poolingSizeLabel">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>1</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>Pooling Size</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="2">
-              <widget class="QLabel" name="resolutionValue">
-               <property name="text">
-                <string>Value:</string>
-               </property>
-              </widget>
-             </item>
              <item row="2" column="1">
               <widget class="QSlider" name="resolutionSlider">
                <property name="sizePolicy">
@@ -368,7 +298,7 @@ font-size: 16px;</string>
                 <number>0</number>
                </property>
                <property name="maximum">
-                <number>6</number>
+                <number>11</number>
                </property>
                <property name="singleStep">
                 <number>1</number>
@@ -405,7 +335,7 @@ font-size: 16px;</string>
                 <number>0</number>
                </property>
                <property name="maximum">
-                <number>11</number>
+                <number>4</number>
                </property>
                <property name="singleStep">
                 <number>1</number>
@@ -414,7 +344,7 @@ font-size: 16px;</string>
                 <number>1</number>
                </property>
                <property name="value">
-                <number>5</number>
+                <number>2</number>
                </property>
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
@@ -426,6 +356,102 @@ font-size: 16px;</string>
                 <number>1</number>
                </property>
               </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="poolingSizeLabel">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>1</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Pooling Size</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="boundingBoxIndexLabel">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>1</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Person Index</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="resolutionLabel">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>1</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Resolution</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="2">
+              <widget class="QLabel" name="resolutionValue">
+               <property name="text">
+                <string>Value: (640, 480)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QLabel" name="poolValue">
+               <property name="text">
+                <string>Value: 96</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <layout class="QGridLayout" name="gridLayout_7">
+               <item row="0" column="1">
+                <widget class="QPushButton" name="nextFace">
+                 <property name="text">
+                  <string>Next</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QPushButton" name="previousFace">
+                 <property name="text">
+                  <string>Back</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0" colspan="2">
+                <widget class="QPushButton" name="resetFace">
+                 <property name="text">
+                  <string>Reset</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="3" column="2">
+              <layout class="QVBoxLayout" name="verticalLayout_2">
+               <item>
+                <widget class="QLabel" name="facesDetected">
+                 <property name="text">
+                  <string>Faces Detected:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="currentIndex">
+                 <property name="text">
+                  <string>Current Index:</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
             </layout>
            </item>

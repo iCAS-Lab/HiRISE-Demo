@@ -18,9 +18,9 @@ class Camera(QLabel):
 
     def __init__(self, parent):
         QLabel.__init__(self)
-        self.video_size = QSize(self.width(), self.height())
+        self.video_size = QSize(3840, 2160)
         self.setup_camera()
-        self.hirise_call = HiRISE()
+        self.hirise = HiRISE()
 
     def setup_camera(self):
         """Initialize camera.
@@ -50,7 +50,7 @@ class Camera(QLabel):
         frame = cv2.flip(frame, 1)
         # Perform detection
         detect, baseline, hirise = None, None, None
-        detect, baseline, hirise, stats = self.hirise_call.detect(
+        detect, baseline, hirise, stats = self.hirise.detect(
             res, frame, self.tab)
         # Check that we have valid results
         if detect is not None and baseline is not None and hirise is not None:

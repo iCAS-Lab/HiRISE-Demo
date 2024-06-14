@@ -16,8 +16,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QFormLayout, QFrame, QGridLayout,
-    QLabel, QMainWindow, QSizePolicy, QSlider,
-    QSpinBox, QTabWidget, QVBoxLayout, QWidget)
+    QLabel, QMainWindow, QPushButton, QSizePolicy,
+    QSlider, QTabWidget, QVBoxLayout, QWidget)
 
 from camera import Camera
 from plot import PlotCanvas
@@ -180,67 +180,15 @@ class Ui_MainWindow(object):
         self.formLayout_3.setObjectName(u"formLayout_3")
         self.gridLayout_6 = QGridLayout()
         self.gridLayout_6.setObjectName(u"gridLayout_6")
-        self.resolutionLabel = QLabel(self.settingsTab)
-        self.resolutionLabel.setObjectName(u"resolutionLabel")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(1)
-        sizePolicy2.setHeightForWidth(self.resolutionLabel.sizePolicy().hasHeightForWidth())
-        self.resolutionLabel.setSizePolicy(sizePolicy2)
-
-        self.gridLayout_6.addWidget(self.resolutionLabel, 2, 0, 1, 1)
-
-        self.boundingBoxIndexLabel = QLabel(self.settingsTab)
-        self.boundingBoxIndexLabel.setObjectName(u"boundingBoxIndexLabel")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(1)
-        sizePolicy3.setHeightForWidth(self.boundingBoxIndexLabel.sizePolicy().hasHeightForWidth())
-        self.boundingBoxIndexLabel.setSizePolicy(sizePolicy3)
-
-        self.gridLayout_6.addWidget(self.boundingBoxIndexLabel, 3, 0, 1, 1)
-
-        self.indexValue = QLabel(self.settingsTab)
-        self.indexValue.setObjectName(u"indexValue")
-
-        self.gridLayout_6.addWidget(self.indexValue, 3, 2, 1, 1)
-
-        self.boundBoxIndex = QSpinBox(self.settingsTab)
-        self.boundBoxIndex.setObjectName(u"boundBoxIndex")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(1)
-        sizePolicy4.setHeightForWidth(self.boundBoxIndex.sizePolicy().hasHeightForWidth())
-        self.boundBoxIndex.setSizePolicy(sizePolicy4)
-
-        self.gridLayout_6.addWidget(self.boundBoxIndex, 3, 1, 1, 1)
-
-        self.poolValue = QLabel(self.settingsTab)
-        self.poolValue.setObjectName(u"poolValue")
-
-        self.gridLayout_6.addWidget(self.poolValue, 0, 2, 1, 1)
-
-        self.poolingSizeLabel = QLabel(self.settingsTab)
-        self.poolingSizeLabel.setObjectName(u"poolingSizeLabel")
-        sizePolicy3.setHeightForWidth(self.poolingSizeLabel.sizePolicy().hasHeightForWidth())
-        self.poolingSizeLabel.setSizePolicy(sizePolicy3)
-
-        self.gridLayout_6.addWidget(self.poolingSizeLabel, 0, 0, 1, 1)
-
-        self.resolutionValue = QLabel(self.settingsTab)
-        self.resolutionValue.setObjectName(u"resolutionValue")
-
-        self.gridLayout_6.addWidget(self.resolutionValue, 2, 2, 1, 1)
-
         self.resolutionSlider = QSlider(self.settingsTab)
         self.resolutionSlider.setObjectName(u"resolutionSlider")
-        sizePolicy5 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
-        sizePolicy5.setHorizontalStretch(0)
-        sizePolicy5.setVerticalStretch(1)
-        sizePolicy5.setHeightForWidth(self.resolutionSlider.sizePolicy().hasHeightForWidth())
-        self.resolutionSlider.setSizePolicy(sizePolicy5)
+        sizePolicy2 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(1)
+        sizePolicy2.setHeightForWidth(self.resolutionSlider.sizePolicy().hasHeightForWidth())
+        self.resolutionSlider.setSizePolicy(sizePolicy2)
         self.resolutionSlider.setMinimum(0)
-        self.resolutionSlider.setMaximum(6)
+        self.resolutionSlider.setMaximum(11)
         self.resolutionSlider.setSingleStep(1)
         self.resolutionSlider.setPageStep(1)
         self.resolutionSlider.setValue(1)
@@ -253,18 +201,90 @@ class Ui_MainWindow(object):
 
         self.poolingSlider = QSlider(self.settingsTab)
         self.poolingSlider.setObjectName(u"poolingSlider")
-        sizePolicy5.setHeightForWidth(self.poolingSlider.sizePolicy().hasHeightForWidth())
-        self.poolingSlider.setSizePolicy(sizePolicy5)
+        sizePolicy2.setHeightForWidth(self.poolingSlider.sizePolicy().hasHeightForWidth())
+        self.poolingSlider.setSizePolicy(sizePolicy2)
         self.poolingSlider.setMinimum(0)
-        self.poolingSlider.setMaximum(11)
+        self.poolingSlider.setMaximum(4)
         self.poolingSlider.setSingleStep(1)
         self.poolingSlider.setPageStep(1)
-        self.poolingSlider.setValue(5)
+        self.poolingSlider.setValue(2)
         self.poolingSlider.setOrientation(Qt.Horizontal)
         self.poolingSlider.setTickPosition(QSlider.TicksBelow)
         self.poolingSlider.setTickInterval(1)
 
         self.gridLayout_6.addWidget(self.poolingSlider, 0, 1, 1, 1)
+
+        self.poolingSizeLabel = QLabel(self.settingsTab)
+        self.poolingSizeLabel.setObjectName(u"poolingSizeLabel")
+        sizePolicy3 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(1)
+        sizePolicy3.setHeightForWidth(self.poolingSizeLabel.sizePolicy().hasHeightForWidth())
+        self.poolingSizeLabel.setSizePolicy(sizePolicy3)
+
+        self.gridLayout_6.addWidget(self.poolingSizeLabel, 0, 0, 1, 1)
+
+        self.boundingBoxIndexLabel = QLabel(self.settingsTab)
+        self.boundingBoxIndexLabel.setObjectName(u"boundingBoxIndexLabel")
+        sizePolicy3.setHeightForWidth(self.boundingBoxIndexLabel.sizePolicy().hasHeightForWidth())
+        self.boundingBoxIndexLabel.setSizePolicy(sizePolicy3)
+
+        self.gridLayout_6.addWidget(self.boundingBoxIndexLabel, 3, 0, 1, 1)
+
+        self.resolutionLabel = QLabel(self.settingsTab)
+        self.resolutionLabel.setObjectName(u"resolutionLabel")
+        sizePolicy4 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(1)
+        sizePolicy4.setHeightForWidth(self.resolutionLabel.sizePolicy().hasHeightForWidth())
+        self.resolutionLabel.setSizePolicy(sizePolicy4)
+
+        self.gridLayout_6.addWidget(self.resolutionLabel, 2, 0, 1, 1)
+
+        self.resolutionValue = QLabel(self.settingsTab)
+        self.resolutionValue.setObjectName(u"resolutionValue")
+
+        self.gridLayout_6.addWidget(self.resolutionValue, 2, 2, 1, 1)
+
+        self.poolValue = QLabel(self.settingsTab)
+        self.poolValue.setObjectName(u"poolValue")
+
+        self.gridLayout_6.addWidget(self.poolValue, 0, 2, 1, 1)
+
+        self.gridLayout_7 = QGridLayout()
+        self.gridLayout_7.setObjectName(u"gridLayout_7")
+        self.nextFace = QPushButton(self.settingsTab)
+        self.nextFace.setObjectName(u"nextFace")
+
+        self.gridLayout_7.addWidget(self.nextFace, 0, 1, 1, 1)
+
+        self.previousFace = QPushButton(self.settingsTab)
+        self.previousFace.setObjectName(u"previousFace")
+
+        self.gridLayout_7.addWidget(self.previousFace, 0, 0, 1, 1)
+
+        self.resetFace = QPushButton(self.settingsTab)
+        self.resetFace.setObjectName(u"resetFace")
+
+        self.gridLayout_7.addWidget(self.resetFace, 1, 0, 1, 2)
+
+
+        self.gridLayout_6.addLayout(self.gridLayout_7, 3, 1, 1, 1)
+
+        self.verticalLayout_2 = QVBoxLayout()
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.facesDetected = QLabel(self.settingsTab)
+        self.facesDetected.setObjectName(u"facesDetected")
+
+        self.verticalLayout_2.addWidget(self.facesDetected)
+
+        self.currentIndex = QLabel(self.settingsTab)
+        self.currentIndex.setObjectName(u"currentIndex")
+
+        self.verticalLayout_2.addWidget(self.currentIndex)
+
+
+        self.gridLayout_6.addLayout(self.verticalLayout_2, 3, 2, 1, 1)
 
 
         self.formLayout_3.setLayout(0, QFormLayout.FieldRole, self.gridLayout_6)
@@ -299,12 +319,16 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.bandwidthTab), QCoreApplication.translate("MainWindow", u"Bandwidth", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.latencyTab), QCoreApplication.translate("MainWindow", u"Latency", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.summaryTab), QCoreApplication.translate("MainWindow", u"Summary", None))
-        self.resolutionLabel.setText(QCoreApplication.translate("MainWindow", u"Resolution", None))
-        self.boundingBoxIndexLabel.setText(QCoreApplication.translate("MainWindow", u"Person Index", None))
-        self.indexValue.setText(QCoreApplication.translate("MainWindow", u"Value:", None))
-        self.poolValue.setText(QCoreApplication.translate("MainWindow", u"Value:", None))
         self.poolingSizeLabel.setText(QCoreApplication.translate("MainWindow", u"Pooling Size", None))
-        self.resolutionValue.setText(QCoreApplication.translate("MainWindow", u"Value:", None))
+        self.boundingBoxIndexLabel.setText(QCoreApplication.translate("MainWindow", u"Person Index", None))
+        self.resolutionLabel.setText(QCoreApplication.translate("MainWindow", u"Resolution", None))
+        self.resolutionValue.setText(QCoreApplication.translate("MainWindow", u"Value: (640, 480)", None))
+        self.poolValue.setText(QCoreApplication.translate("MainWindow", u"Value: 96", None))
+        self.nextFace.setText(QCoreApplication.translate("MainWindow", u"Next", None))
+        self.previousFace.setText(QCoreApplication.translate("MainWindow", u"Back", None))
+        self.resetFace.setText(QCoreApplication.translate("MainWindow", u"Reset", None))
+        self.facesDetected.setText(QCoreApplication.translate("MainWindow", u"Faces Detected:", None))
+        self.currentIndex.setText(QCoreApplication.translate("MainWindow", u"Current Index:", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.settingsTab), QCoreApplication.translate("MainWindow", u"Settings", None))
     # retranslateUi
 
