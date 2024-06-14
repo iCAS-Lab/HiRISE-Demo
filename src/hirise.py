@@ -5,12 +5,15 @@ import time
 import sys
 import cv2
 import numpy as np
-from PySide6.QtCore import Signal
+from PySide6.QtCore import QObject, Signal
 from ultralytics import YOLO
 ################################################################################
 
 
-class HiRISE():
+class HiRISE(QObject):
+
+    update_num_heads = Signal(int)
+
     def __init__(
         self,
         pooled_img_w: int = 96,
@@ -21,6 +24,7 @@ class HiRISE():
         basesz: tuple = (140, 140),
         bbox_margin: float = 0.1
     ):
+        super().__init__()
         self.pooled_img_width = pooled_img_w
         self.pooled_img_height = pooled_img_h
         self.model = model
@@ -344,8 +348,7 @@ class HiRISE():
             tracker="botsort.yaml",
             imgsz=96
         )
-        self.num_heads = len(head_results_hirise[0].boxes.id)
-        print(self.num_heads)
+
         latency = np.sum(list(head_results_hirise[0].speed.values()))
         # Scale image
         frame_scaled = cv2.resize(frame, (self.bw, self.bh))
@@ -357,6 +360,15 @@ class HiRISE():
         )
         # If we detected head boxes then iterate through
         if len(head_results_hirise[0].boxes) > 0:
+            num_heads = head_results_hirise[0].boxes.id
+            if num_heads is None:
+                self.num_heads = 0
+                self.update_num_heads.emit(self.num_heads)
+            elif len(num_heads) != self.num_heads:
+                # if len(num_heads) < self.num_heads and self.focus_number == self.num_heads - 1:
+                #     self.focus_number -= 1
+                self.num_heads = len(num_heads)
+                self.update_num_heads.emit(self.num_heads)
             for j, headbox in reversed(
                     list(enumerate(head_results_hirise[0].boxes))):
                 # Ultralytics uses X,Y,W,H bounding box coordinates (x,y are center of bbox)

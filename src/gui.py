@@ -65,17 +65,30 @@ class MainWindow(QMainWindow):
         self.ui.nextFace.clicked.connect(self.next_face)
         self.ui.previousFace.clicked.connect(self.previous_face)
         self.ui.resetFace.clicked.connect(self.reset_face)
+        self.ui.detectVideo.hirise.update_num_heads.connect(
+            self.update_num_heads_detected)
+
+    def update_num_heads_detected(self, num_faces: int):
+        self.ui.facesDetected.setText(f'Detected: {num_faces}')
+        self.ui.currentIndex.setText(
+            f'Current Index: {self.ui.detectVideo.hirise.focus_number}')
 
     def next_face(self):
         if self.ui.detectVideo.hirise.focus_number < self.ui.detectVideo.hirise.num_heads - 1:
             self.ui.detectVideo.hirise.focus_number += 1
+            self.ui.currentIndex.setText(
+                f'Current Index: {self.ui.detectVideo.hirise.focus_number}')
 
     def previous_face(self):
-        if self.ui.detectVideo.hirise.focus_number >= self.ui.detectVideo.hirise.num_heads - 1:
+        if self.ui.detectVideo.hirise.focus_number > 0:
             self.ui.detectVideo.hirise.focus_number -= 1
+            self.ui.currentIndex.setText(
+                f'Current Index: {self.ui.detectVideo.hirise.focus_number}')
 
     def reset_face(self):
         self.ui.detectVideo.hirise.focus_number = 0
+        self.ui.currentIndex.setText(
+            f'Current Index: {self.ui.detectVideo.hirise.focus_number}')
 
     def pooling_changed(self):
         pooling_id = self.ui.poolingSlider.value()

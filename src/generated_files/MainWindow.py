@@ -188,7 +188,7 @@ class Ui_MainWindow(object):
         sizePolicy2.setHeightForWidth(self.resolutionSlider.sizePolicy().hasHeightForWidth())
         self.resolutionSlider.setSizePolicy(sizePolicy2)
         self.resolutionSlider.setMinimum(0)
-        self.resolutionSlider.setMaximum(11)
+        self.resolutionSlider.setMaximum(10)
         self.resolutionSlider.setSingleStep(1)
         self.resolutionSlider.setPageStep(1)
         self.resolutionSlider.setValue(1)
@@ -327,8 +327,8 @@ class Ui_MainWindow(object):
         self.nextFace.setText(QCoreApplication.translate("MainWindow", u"Next", None))
         self.previousFace.setText(QCoreApplication.translate("MainWindow", u"Back", None))
         self.resetFace.setText(QCoreApplication.translate("MainWindow", u"Reset", None))
-        self.facesDetected.setText(QCoreApplication.translate("MainWindow", u"Faces Detected:", None))
-        self.currentIndex.setText(QCoreApplication.translate("MainWindow", u"Current Index:", None))
+        self.facesDetected.setText(QCoreApplication.translate("MainWindow", u"Detected:", None))
+        self.currentIndex.setText(QCoreApplication.translate("MainWindow", u"Current Index: 0", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.settingsTab), QCoreApplication.translate("MainWindow", u"Settings", None))
     # retranslateUi
 
