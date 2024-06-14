@@ -13,7 +13,7 @@ install:
 	mamba activate hirise
 
 kill:
-	pkill
+	pkill xinit
 
 convert:
 	python scripts/convert.py
