@@ -102,6 +102,11 @@ class HiRISE(QObject):
             self.pooled_img_width * self.pooled_img_height*self.nc
         )
         self.peak_img_sram_baseln = self.bw*self.bh*3
+        self.total_latency = 0.0
+        self.total_fps = 0.0
+        self.total_hirise_bandwidth = 0.0
+        self.total_hirise_peak_memory = 0.0
+        self.num_frames = 0
         self.init_stats_dict()
 
     def change_resolution(self, new_resolution: int):
