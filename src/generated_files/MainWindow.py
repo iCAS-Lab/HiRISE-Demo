@@ -310,7 +310,7 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"HiRISE Demo", None))
         self.detectLabel.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><span style=\" font-size:24pt; font-weight:700; color:#ffffff;\">Face Detection</span></p></body></html>", None))
         self.detectVideo.setText("")
-        self.disabledLabel.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><span style=\" font-size:24pt; font-weight:700; color:#ffffff;\">HiRISE Disabled</span></p></body></html>", None))
+        self.disabledLabel.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><span style=\" font-size:24pt; font-weight:700; color:#ffffff;\">HiRISE Disabled (Baseline)</span></p></body></html>", None))
         self.disabledVideo.setText("")
         self.enabledLabel.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><span style=\" font-size:24pt; font-weight:700; color:#ffffff;\">HiRISE Enabled</span></p></body></html>", None))
         self.enabledVideo.setText("")

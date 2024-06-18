@@ -76,10 +76,13 @@ class HiRISE(QObject):
             4: 160,
         }
 
-        # Constant Baseline Computations
+        # Constant Baseline Computations, divide by 1000 for kB
         self.bandwidth_baseln = float(self.camera_image_size[0] *
-                                      self.camera_image_size[1] * 3)
-        self.c_bandwidth_baseln = self.bw*self.bh*3.0
+                                      self.camera_image_size[1] * 3) / 1000
+        self.c_bandwidth_baseln = (self.bw*self.bh*3.0) / 1000
+        self.peak_memory_baseln = float(self.camera_image_size[0] *
+                                        self.camera_image_size[1] * 3) / 1000
+        self.c_peak_memory_baseln = (self.bw*self.bh*3.0) / 1000
 
         # Running Values for averaging
         self.total_latency = 0.0
@@ -96,12 +99,11 @@ class HiRISE(QObject):
 
     def reset_values(self):
         self.bandwidth_baseln = float(self.camera_image_size[0] *
-                                      self.camera_image_size[1] * 3)
-        self.c_bandwidth_baseln = self.bw*self.bh*3.0
-        self.peak_img_sram_hirise = float(
-            self.pooled_img_width * self.pooled_img_height*self.nc
-        )
-        self.peak_img_sram_baseln = self.bw*self.bh*3
+                                      self.camera_image_size[1] * 3) / 1000
+        self.c_bandwidth_baseln = (self.bw*self.bh*3.0) / 1000
+        self.peak_memory_baseln = float(self.camera_image_size[0] *
+                                        self.camera_image_size[1] * 3) / 1000
+        self.c_peak_memory_baseln = (self.bw*self.bh*3.0) / 1000
         self.total_latency = 0.0
         self.total_fps = 0.0
         self.total_hirise_bandwidth = 0.0
@@ -127,14 +129,14 @@ class HiRISE(QObject):
         self.stats = {
             'baseline': {
                 'Peak Memory': {
-                    'now': 0.0,
-                    'min': np.inf,
-                    'max': -np.inf,
-                    'avg': 0.0,
-                    'c_now': 0.0,
-                    'c_min': np.inf,
-                    'c_max': -np.inf,
-                    'c_avg': 0.0
+                    'now': self.peak_memory_baseln,
+                    'min': self.peak_memory_baseln,
+                    'max': self.peak_memory_baseln,
+                    'avg': self.peak_memory_baseln,
+                    'c_now': self.c_peak_memory_baseln,
+                    'c_min': self.c_peak_memory_baseln,
+                    'c_max': self.c_peak_memory_baseln,
+                    'c_avg': self.c_peak_memory_baseln
                 },
                 'Bandwidth': {
                     'now': self.bandwidth_baseln,
@@ -153,14 +155,14 @@ class HiRISE(QObject):
                     'min': np.inf,
                     'max': -np.inf,
                     'avg': 0.0,
-                    'units': 'Units'
+                    'units': 'kilobytes'
                 },
                 'Bandwidth': {
                     'now': 0.0,
                     'min': np.inf,
                     'max': -np.inf,
                     'avg': 0.0,
-                    'units': 'Units'
+                    'units': 'kilobytes'
                 },
                 'Latency': {
                     'now': 0.0,
@@ -330,7 +332,6 @@ class HiRISE(QObject):
         bandwidth_hirise = 0.0
         peak_img_sram_hirise = (self.pooled_img_width *
                                 self.pooled_img_height*self.nc)  # HiRISE
-        peak_img_sram_baseln = self.bw*self.bh*3
         head_image_baseline = None
         head_image_hirise = None
         detect_image = None
@@ -356,7 +357,7 @@ class HiRISE(QObject):
 
         latency = np.sum(list(head_results_hirise[0].speed.values()))
         # Scale image
-        frame_scaled = cv2.resize(frame, (self.bw, self.bh))
+        frame_scaled = frame.copy()
         x, y, w, h = 0, 0, 0, 0
 
         # Bandwidth computations
@@ -434,8 +435,8 @@ class HiRISE(QObject):
                     self.focus_head_baseline = head_image_baseline
             # Update our statistics
             self.stats['hirise']['Latency']['now'] = latency
-            self.stats['hirise']['Bandwidth']['now'] = bandwidth_hirise
-            self.stats['hirise']['Peak Memory']['now'] = peak_img_sram_hirise
+            self.stats['hirise']['Bandwidth']['now'] = bandwidth_hirise / 1000
+            self.stats['hirise']['Peak Memory']['now'] = peak_img_sram_hirise / 1000
             if tab == 'Summary':
                 # Increment frame counter for average calculations
                 self.num_frames += 1
