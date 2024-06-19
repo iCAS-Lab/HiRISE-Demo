@@ -357,7 +357,8 @@ class HiRISE(QObject):
 
         latency = np.sum(list(head_results_hirise[0].speed.values()))
         # Scale image
-        frame_scaled = frame.copy()
+        frame_scaled = cv2.resize(frame, (self.bw, self.bh))
+        # frame_scaled = frame.copy()
         x, y, w, h = 0, 0, 0, 0
 
         # Bandwidth computations
