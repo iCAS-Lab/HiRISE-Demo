@@ -16,13 +16,12 @@ class HiRISE(QObject):
 
     def __init__(
         self,
-        pooled_img_w: int = 96,
-        pooled_img_h: int = 96,
+        pooled_img_w: int = 32,
+        pooled_img_h: int = 32,
         # model: str = './src/models/face_det.pt',
         model: str = './src/models/face_det_full_integer_quant_edgetpu.tflite',
         gray: bool = False,
-        basesz: tuple = (140, 140),
-        bbox_margin: float = 0.1
+        basesz: tuple = (96, 96),
     ):
         super().__init__()
         self.pooled_img_width = pooled_img_w
@@ -53,28 +52,66 @@ class HiRISE(QObject):
         self.baseline_color = (238, 147, 56)
 
         # Original Image Size
-        self.camera_image_size = (640, 480)
+        self.camera_image_size = (96, 96)
+        self.hirise_pixel_array_size = (96, 96)
+        self.camera_image_sizes = {
+            0: (96, 96),
+            1: (100, 100),
+            2: (128, 128),
+            3: (256, 256),
+            4: (320, 320),
+            5: (640, 360),
+            6: (640, 480),
+            7: (800, 600),
+            8: (960, 540),
+            9: (960, 720),
+            10: (1024, 576),
+            11: (1280, 720),
+            12: (1280, 960),
+            13: (1920, 1080),
+            14: (2560, 1440),
+            15: (3840, 2160)
+        }
+        self.baseline_array_sizes = {
+            0: (96, 96),
+            1: (100, 100),
+            2: (128, 128),
+            3: (256, 256),
+            4: (320, 320),
+            5: (640, 360),
+            6: (640, 480),
+            7: (800, 600),
+            8: (960, 540),
+            9: (960, 720),
+            10: (1024, 576),
+            11: (1280, 720),
+            12: (1280, 960),
+            13: (1920, 1080),
+            14: (2560, 1440),
+            15: (3840, 2160)
+        }
 
-        self.resolutions = {
-            0: (640, 360),
-            1: (640, 480),
-            2: (800, 600),
-            3: (960, 540),
-            4: (960, 720),
-            5: (1024, 576),
-            6: (1280, 720),
-            7: (1280, 960),
-            8: (1920, 1080),
-            9: (2560, 1440),
-            10: (3840, 2160)
+        self.hirise_array_sizes = {
+            0: (96, 96),
+            1: (100, 100),
+            2: (128, 128),
+            3: (256, 256),
+            4: (320, 320),
+            5: (640, 360),
+            6: (640, 480),
+            7: (800, 600),
+            8: (960, 540),
+            9: (960, 720),
+            10: (1024, 576),
+            11: (1280, 720),
+            12: (1280, 960),
+            13: (1920, 1080),
+            14: (2560, 1440),
+            15: (3840, 2160)
         }
-        self.pooling_sizes = {
-            0: 32,
-            1: 64,
-            2: 96,
-            3: 128,
-            4: 160,
-        }
+        self.detect_sizes = {}
+        for i in range(16):
+            self.detect_sizes[i] = (i+1)*32
 
         # Constant Baseline Computations, divide by 1000 for kB
         self.bandwidth_baseln = float(self.camera_image_size[0] *
@@ -111,19 +148,26 @@ class HiRISE(QObject):
         self.num_frames = 0
         self.init_stats_dict()
 
-    def change_resolution(self, new_resolution: int):
-        self.camera_image_size = self.resolutions[new_resolution]
+    def change_camera_resolution(self, id: int):
+        self.camera_image_size = self.camera_images_size[id]
         self.reset_values()
         return self.camera_image_size
 
-    def change_pooling(self, new_pool: int):
-        self.pooled_img_height = self.pooling_sizes[new_pool]
-        self.pooled_img_width = self.pooling_sizes[new_pool]
+    def change_baseline_array(self, id: int):
+        self.bw, self.bh = self.baseline_array_sizes[id]
         self.reset_values()
-        return self.pooled_img_width
+        return self.baseline_array_sizes[id]
 
-    def change_id(new_id: int):
-        pass
+    def change_hirise_array(self, id: int):
+        self.hirise_pixel_array_size = self.hirise_array_sizes[id]
+        self.reset_values()
+        return self.hirise_pixel_array_size
+
+    def change_detection_resolution(self, id: int):
+        self.pooled_img_height = self.detect_sizes[id]
+        self.pooled_img_width = self.detect_sizes[id]
+        self.reset_values()
+        return self.detect_sizes[id]
 
     def init_stats_dict(self):
         self.stats = {
@@ -335,7 +379,7 @@ class HiRISE(QObject):
         head_image_baseline = None
         head_image_hirise = None
         detect_image = None
-        # Resize the frame
+        # Resize the frame, this is the camera's default resolution
         frame = cv2.resize(frame, self.camera_image_size)
         # Scale the frame
         frame_scaled = cv2.resize(
@@ -419,17 +463,17 @@ class HiRISE(QObject):
                     hh,
                     center=True,
                 )
+                # Fix C-contiguous memory issues
                 zeros = np.zeros(head_image_baseline.shape, dtype=np.uint8)
                 np.copyto(zeros, head_image_baseline)
                 head_image_baseline = zeros
+                zeros_hirise = np.zeros(
+                    head_image_hirise.shape, dtype=np.uint8)
+                np.copyto(zeros_hirise, head_image_hirise)
+                head_image_hirise = zeros_hirise
                 # Update bandwidth
                 bandwidth_hirise += head_image_hirise.shape[0] * \
                     head_image_hirise.shape[1]*3
-                try:
-                    head_image_hirise = cv2.resize(
-                        head_image_hirise, (self.pooled_img_width, self.pooled_img_height))
-                except Exception as e:
-                    return None, None, None, self.stats
                 # Set the head to focus on if there are multiple
                 if j == self.focus_number:
                     self.focus_head_hirise = head_image_hirise

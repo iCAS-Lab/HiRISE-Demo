@@ -60,8 +60,18 @@ class MainWindow(QMainWindow):
         self.ui.detectVideo.update_frame.connect(self.update_cameras)
         self.ui.detectVideo.update_stats.connect(self.update_tab)
         self.ui.tabWidget.currentChanged.connect(self.tab_changed)
-        self.ui.poolingSlider.valueChanged.connect(self.pooling_changed)
-        self.ui.resolutionSlider.valueChanged.connect(self.resolution_changed)
+        self.ui.cameraResolutionSlider.valueChanged.connect(
+            self.camera_resolution_changed
+        )
+        self.ui.detectionResolutionSlider.valueChanged.connect(
+            self.detection_resolution_changed
+        )
+        self.ui.baselinePixelArraySlider.valueChanged.connect(
+            self.baseline_pixel_array_changed
+        )
+        self.ui.hirisePixelArraySlider.valueChanged.connect(
+            self.hirise_pixel_array_changed
+        )
         self.ui.nextFace.clicked.connect(self.next_face)
         self.ui.previousFace.clicked.connect(self.previous_face)
         self.ui.resetFace.clicked.connect(self.reset_face)
@@ -90,20 +100,48 @@ class MainWindow(QMainWindow):
         self.ui.currentIndex.setText(
             f'Current Index: {self.ui.detectVideo.hirise.focus_number}')
 
-    def pooling_changed(self):
-        pooling_id = self.ui.poolingSlider.value()
-        new_pooling = self.ui.detectVideo.hirise.change_pooling(pooling_id)
-        self.ui.poolValue.setText(f'Value: {new_pooling}')
+    def camera_resolution_changed(self):
+        camera_resolution_id = self.ui.cameraResolutionSlider.value()
+        new_camera_resolution = \
+            self.ui.detectVideo.hirise.change_camera_resolution(
+                camera_resolution_id
+            )
+        self.ui.cameraResolutionValue.setText(
+            f'Value: {new_camera_resolution}'
+        )
         self.baseline_data = np.zeros((50,))
         self.baseline_data_c = np.zeros((50,))
         self.hirise_data = np.zeros((50,))
 
-    def resolution_changed(self):
-        resolution_id = self.ui.resolutionSlider.value()
-        new_resolution = self.ui.detectVideo.hirise.change_resolution(
-            resolution_id
+    def detection_resolution_changed(self):
+        detect_resolution_slider_id = self.ui.detectionResolutionSlider.value()
+        new_detection_resolution = \
+            self.ui.detectVideo.hirise.change_detection_resolution(
+                detect_resolution_slider_id
+            )
+        self.ui.detectionResolutionValue.setText(
+            f'Value: {new_detection_resolution}'
         )
-        self.ui.resolutionValue.setText(f'Value: {new_resolution}')
+        self.baseline_data = np.zeros((50,))
+        self.baseline_data_c = np.zeros((50,))
+        self.hirise_data = np.zeros((50,))
+
+    def baseline_pixel_array_changed(self):
+        baseline_slider_id = self.ui.baselinePixelArraySlider.value()
+        new_array_size = self.ui.detectVideo.hirise.change_baseline_array(
+            baseline_slider_id
+        )
+        self.ui.baselinePixelArrayValue.setText(f'Value: {new_array_size}')
+        self.baseline_data = np.zeros((50,))
+        self.baseline_data_c = np.zeros((50,))
+        self.hirise_data = np.zeros((50,))
+
+    def hirise_pixel_array_changed(self):
+        hirise_slider_id = self.ui.hirisePixelArraySlider.value()
+        new_array_size = self.ui.detectVideo.hirise.change_hirise_array(
+            hirise_slider_id
+        )
+        self.ui.hirisePixelArrayValue.setText(f'Value: {new_array_size}')
         self.baseline_data = np.zeros((50,))
         self.baseline_data_c = np.zeros((50,))
         self.hirise_data = np.zeros((50,))
