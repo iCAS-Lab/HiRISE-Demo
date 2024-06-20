@@ -52,6 +52,9 @@ class MainWindow(QMainWindow):
         self.plot_ref_baseline_c = None
         self.plot_ref_hirise = None
 
+        # Disable Peak Memory tab
+        self.ui.tabWidget.removeTab(0)
+
         # Set Camera tab
         self.ui.detectVideo.set_tab(self.current_tab_name)
         self.showFullScreen()
@@ -220,6 +223,12 @@ class MainWindow(QMainWindow):
             stats['baseline']['Peak Memory']['max'],
             stats['baseline']['Peak Memory']['avg'],
         )
+        bc_pm_now, bc_pm_min, bc_pm_max, bc_pm_mean = (
+            stats['baseline']['Peak Memory']['c_now'],
+            stats['baseline']['Peak Memory']['c_min'],
+            stats['baseline']['Peak Memory']['c_max'],
+            stats['baseline']['Peak Memory']['c_avg'],
+        )
         bc_band_now, bc_band_min, bc_band_max, bc_band_mean = (
             stats['baseline']['Bandwidth']['c_now'],
             stats['baseline']['Bandwidth']['c_min'],
@@ -234,15 +243,21 @@ class MainWindow(QMainWindow):
         )
         self.peak_memory_stats.setText(
             f'Peak Memory ({pm_units}):'
-            + f'\n\t> Baseline:\n\t{b_pm_now} (now) {b_pm_min} (min) {b_pm_max}'
+            + f'\n\t> Baseline:\n\t{b_pm_now:.3f} (now) {b_pm_min:.3f} '
+            + f'(min) {b_pm_max:.3f}'
             + f' (max) {b_pm_mean:.3f} (mean)\n'
-            + f'\t> HiRISE:\n\t{pm_now} (now) {pm_min} (min) {pm_max} (max) '
+            + f'\t> Baseline Compressed:\n\t{bc_pm_now:.3f} '
+            + f'(now) {bc_pm_min:.3f} (min) {bc_pm_max:.3f} (max) '
+            + f'{bc_pm_mean:.3f} (mean)\n'
+            + f'\t> HiRISE:\n\t{pm_now:.3f} (now) {pm_min:.3f} '
+            + f'(min) {pm_max:.3f} (max) '
             + f'{pm_mean:.3f} (mean)\n'
         )
         self.bandwidth_stats.setText(
             f'Bandwidth ({band_units}): '
-            + f'\n\t> Baseline Original:\n\t{b_band_now} (now) '
-            + f'{b_band_min} (min) {b_band_max} (max) {b_band_mean} (mean)\n'
+            + f'\n\t> Baseline Original:\n\t{b_band_now:.3f} (now) '
+            + f'{b_band_min:.3f} (min) {b_band_max:.3f} (max) '
+            + f'{b_band_mean:.3f} (mean)\n'
             + f'\t> Baseline Compressed:\n\t{bc_band_now} (now) '
             + f'{bc_band_min} (min) {bc_band_max} (max) '
             + f'{bc_band_mean:.3f} (mean)\n'
