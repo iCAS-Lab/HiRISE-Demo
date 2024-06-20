@@ -114,6 +114,8 @@ class HiRISE(QObject):
         self.total_hirise_peak_memory = 0.0
 
         # Focus
+        self.focus_head_hirise = None
+        self.focus_head_baseline = None
         self.focus_number = 0
         self.num_heads = 0
 
@@ -406,17 +408,21 @@ class HiRISE(QObject):
         # If we detected head boxes then iterate through
         if len(head_results_hirise[0].boxes) > 0:
             # Get he ids of the heads
-            num_heads = head_results_hirise[0].boxes.id
+            head_ids = head_results_hirise[0].boxes.id
             # If no heads were detected then update GUI
-            if num_heads is None:
+            if head_ids is None:
+                # No heads detected
                 self.num_heads = 0
                 self.update_num_heads.emit(self.num_heads)
-            elif len(num_heads) != self.num_heads:
-                # If there are heads in the scene, and the number of heads
-                # changed we need to update the GUI
-                # if len(num_heads) < self.num_heads and self.focus_number == self.num_heads - 1:
-                #     self.focus_number -= 1
-                self.num_heads = len(num_heads)
+            else:
+                # If someone leaves the scene we should use the previously
+                # detected person's face
+                if len(head_ids) < self.num_heads:
+                    if len(head_ids) > 1 and self.focus_number > 0:
+                        self.focus_number -= 1
+                    else:
+                        self.focus_number = 0
+                self.num_heads = len(head_ids)
                 self.update_num_heads.emit(self.num_heads)
             # Now we perform the bounding box drawing and cropping of the faces
             # based on the bounding boxes returned by the YOLO model.
