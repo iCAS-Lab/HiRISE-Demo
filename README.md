@@ -130,6 +130,47 @@ By default the demo scales the frames displayed in the GUI visualizers. While th
             enabledVideoSize, Qt.AspectRatioMode.KeepAspectRatio))
 ```
 
+### Simulated Camera Resolution
+
+By default, the images captured for the demo are captured at a resolution of 3840x2160 (4K) and then resized to a different resolution to simulate multiple differing camera resolutions. If your camera does not support 4K, you can change the default camera resolution in `src/camera.py` in the `__init__` function:
+
+```python
+self.video_size = QSize(3840, 2160)
+```
+
+This resolution can be considered the upper bound on quality and resolution for the demo since resizing to a larger resolution would not yield any more detail in the image. In `src/hirise.py` we use OpenCV to resize the image to the demo user's desired camera sensor resolution in the `detect` function:
+
+```python
+        # Resize the frame, this is the camera's default resolution,
+        # this simulates different camera sensor resolutions
+        frame = cv2.resize(frame, self.current_camera_resolution)
+```
+
+### Change the YOLO model
+
+If you wish to try the demo with a different model, you can easily do so by specifying the path to a model inside of the `src/camera.py` file when initializing the `HiRISE()` object inside of the `__init__` function.
+
+Simply pass the model's path by writing:
+
+```python
+self.hirise = HiRISE(model=path_to_model)
+```
+
+You could also simply change the default parameter inside of `src/hirise.py` in the definition of the HiRISE class via:
+
+```python
+class HiRISE(QObject):
+
+    update_num_heads = Signal(int)
+
+    def __init__(
+        self,
+        ...
+        model: str = './src/models/face_det_full_integer_quant_edgetpu.tflite',
+        ...
+    ):
+```
+
 ## Troubleshooting
 
 ### Issues with X libraries
