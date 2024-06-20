@@ -25,7 +25,7 @@
 1. Install your Raspberry Pi 5 with Raspberry Pi OS Lite 64-bit. Note this OS does not contain a GUI or Desktop Environment. You should be thoroughly familiar with using the linux command line prior to starting.
 2. After installing the OS on the Pi 5, you will need to install one of the Coral Edge TPU libraries: libedgetpu-std or libedgetpu-max. We used the max version in our demo for the highest YOLO inference performance.
 3. Ensure that you also install xorg (for displaying the demo GUI headlessly) and make (for making running simpler).
-4. Install  a conda-forge channel compatible version of conda like [Miniforge3]().
+4. Install  a conda-forge channel compatible version of conda like [Miniforge3](https://github.com/conda-forge/miniforge?tab=readme-ov-file#install).
 5. Create the conda environment specified in the `env.yml` file using `mamba env create -f env.yml` or `conda env create -f env.yml`. We recomment using the `mamba` command since mamba is typically faster at solving dependencies and conflicts.
 6. Activate the `hirise` conda environment using `mamba activate hirise` or `conda activate hirise`.
 7. Run `make run` to start the demo process.
@@ -163,10 +163,24 @@ pkill xinit
 
 This demo was created by Brendan Reidy and Peyton Chandarana.  
 
-If you have any questions, please contact us on LinkedIn.
+If you have any questions regarding the demo, please contact us on LinkedIn.  
+
+Paper Authors:  
+
+Brendan Reidy - University of South Carolina  
+Sepehr Tabrizchi - University of Nebraska, Lincoln  
+MohammadReza Mohammadi - University of South Carolina  
+Shaahin Angizi - New Jersey Institute of Technology  
+Arman Roohi - University of Nebraska, Lincoln  
+Ramtin Zand - University of South Carolina  
 
 # Paper Citation:
 
-```
+HiRISE: High-Resolution Image Scaling for Edge ML via In-Sensor Compression and Selective ROI  
 
+**_Description:_**  
+With the rise of tiny IoT devices powered by machine learning (ML), many researchers have directed their focus toward compressing models to fit on tiny edge devices. Recent works have achieved remarkable success in compressing ML models for object detection and image classification on microcontrollers with small memory, e.g., 512kB SRAM. However, there remain many challenges prohibiting the deployment of ML systems that require high-resolution images. Due to fundamental limits in memory capacity for tiny IoT devices, it may be physically impossible to store large images without external hardware. To this end, we propose a high-resolution image scaling system for edge ML, called HiRISE, which is equipped with selective region-of-interest (ROI) capability leveraging analog in-sensor image scaling. Our methodology not only significantly reduces the peak memory requirements, but also achieves up to 17.7x reduction in data transfer and energy consumption.
+
+```
+TBA
 ```
