@@ -41,6 +41,7 @@
 - All relevant demo code and models can be found in the `src` directory
 - `src/main.py` - launches the program
 - `src/gui.py` - contains the instance of the MainWindow class used to define the GUI controls
+- `src/camera.py` - sets up the camera to be used in the demo and initializes the HiRISE implementation
 - `src/hirise.py` - contains the code relevant to simulating the HiRISE implementation and the baseline implementations for comparison
 - `src/ui/` - This directory contains the `pyside6-designer` generated GUI definition in XML
 - `src/generated_files/` - This directory contains the converted python files for the GUI
