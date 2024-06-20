@@ -69,9 +69,6 @@ class MainWindow(QMainWindow):
         self.ui.baselinePixelArraySlider.valueChanged.connect(
             self.baseline_pixel_array_changed
         )
-        self.ui.hirisePixelArraySlider.valueChanged.connect(
-            self.hirise_pixel_array_changed
-        )
         self.ui.nextFace.clicked.connect(self.next_face)
         self.ui.previousFace.clicked.connect(self.previous_face)
         self.ui.resetFace.clicked.connect(self.reset_face)
@@ -132,16 +129,6 @@ class MainWindow(QMainWindow):
             baseline_slider_id
         )
         self.ui.baselinePixelArrayValue.setText(f'Value: {new_array_size}')
-        self.baseline_data = np.zeros((50,))
-        self.baseline_data_c = np.zeros((50,))
-        self.hirise_data = np.zeros((50,))
-
-    def hirise_pixel_array_changed(self):
-        hirise_slider_id = self.ui.hirisePixelArraySlider.value()
-        new_array_size = self.ui.detectVideo.hirise.change_hirise_array(
-            hirise_slider_id
-        )
-        self.ui.hirisePixelArrayValue.setText(f'Value: {new_array_size}')
         self.baseline_data = np.zeros((50,))
         self.baseline_data_c = np.zeros((50,))
         self.hirise_data = np.zeros((50,))

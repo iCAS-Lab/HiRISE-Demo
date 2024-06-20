@@ -180,40 +180,25 @@ class Ui_MainWindow(object):
         self.formLayout_3.setObjectName(u"formLayout_3")
         self.gridLayout_6 = QGridLayout()
         self.gridLayout_6.setObjectName(u"gridLayout_6")
-        self.detectionResolutionValue = QLabel(self.settingsTab)
-        self.detectionResolutionValue.setObjectName(u"detectionResolutionValue")
+        self.baselinePixelArrayLabel = QLabel(self.settingsTab)
+        self.baselinePixelArrayLabel.setObjectName(u"baselinePixelArrayLabel")
 
-        self.gridLayout_6.addWidget(self.detectionResolutionValue, 1, 2, 1, 1)
+        self.gridLayout_6.addWidget(self.baselinePixelArrayLabel, 3, 0, 1, 1)
 
-        self.detectionResolutionLabel = QLabel(self.settingsTab)
-        self.detectionResolutionLabel.setObjectName(u"detectionResolutionLabel")
+        self.cameraResolutionLabel = QLabel(self.settingsTab)
+        self.cameraResolutionLabel.setObjectName(u"cameraResolutionLabel")
+
+        self.gridLayout_6.addWidget(self.cameraResolutionLabel, 0, 0, 1, 1)
+
+        self.boundingBoxIndexLabel = QLabel(self.settingsTab)
+        self.boundingBoxIndexLabel.setObjectName(u"boundingBoxIndexLabel")
         sizePolicy2 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy2.setHorizontalStretch(0)
         sizePolicy2.setVerticalStretch(1)
-        sizePolicy2.setHeightForWidth(self.detectionResolutionLabel.sizePolicy().hasHeightForWidth())
-        self.detectionResolutionLabel.setSizePolicy(sizePolicy2)
+        sizePolicy2.setHeightForWidth(self.boundingBoxIndexLabel.sizePolicy().hasHeightForWidth())
+        self.boundingBoxIndexLabel.setSizePolicy(sizePolicy2)
 
-        self.gridLayout_6.addWidget(self.detectionResolutionLabel, 1, 0, 1, 1)
-
-        self.gridLayout_7 = QGridLayout()
-        self.gridLayout_7.setObjectName(u"gridLayout_7")
-        self.nextFace = QPushButton(self.settingsTab)
-        self.nextFace.setObjectName(u"nextFace")
-
-        self.gridLayout_7.addWidget(self.nextFace, 0, 1, 1, 1)
-
-        self.previousFace = QPushButton(self.settingsTab)
-        self.previousFace.setObjectName(u"previousFace")
-
-        self.gridLayout_7.addWidget(self.previousFace, 0, 0, 1, 1)
-
-        self.resetFace = QPushButton(self.settingsTab)
-        self.resetFace.setObjectName(u"resetFace")
-
-        self.gridLayout_7.addWidget(self.resetFace, 1, 0, 1, 2)
-
-
-        self.gridLayout_6.addLayout(self.gridLayout_7, 5, 1, 1, 1)
+        self.gridLayout_6.addWidget(self.boundingBoxIndexLabel, 4, 0, 1, 1)
 
         self.detectionResolutionSlider = QSlider(self.settingsTab)
         self.detectionResolutionSlider.setObjectName(u"detectionResolutionSlider")
@@ -233,43 +218,39 @@ class Ui_MainWindow(object):
 
         self.gridLayout_6.addWidget(self.detectionResolutionSlider, 1, 1, 1, 1)
 
-        self.hirisePixelArraySlider = QSlider(self.settingsTab)
-        self.hirisePixelArraySlider.setObjectName(u"hirisePixelArraySlider")
-        sizePolicy3.setHeightForWidth(self.hirisePixelArraySlider.sizePolicy().hasHeightForWidth())
-        self.hirisePixelArraySlider.setSizePolicy(sizePolicy3)
-        self.hirisePixelArraySlider.setMinimum(0)
-        self.hirisePixelArraySlider.setMaximum(15)
-        self.hirisePixelArraySlider.setSingleStep(1)
-        self.hirisePixelArraySlider.setPageStep(1)
-        self.hirisePixelArraySlider.setValue(0)
-        self.hirisePixelArraySlider.setSliderPosition(0)
-        self.hirisePixelArraySlider.setOrientation(Qt.Horizontal)
-        self.hirisePixelArraySlider.setTickPosition(QSlider.TicksBelow)
-        self.hirisePixelArraySlider.setTickInterval(1)
+        self.cameraResolutionValue = QLabel(self.settingsTab)
+        self.cameraResolutionValue.setObjectName(u"cameraResolutionValue")
 
-        self.gridLayout_6.addWidget(self.hirisePixelArraySlider, 4, 1, 1, 1)
+        self.gridLayout_6.addWidget(self.cameraResolutionValue, 0, 2, 1, 1)
 
-        self.hirisePixelArrayLabel = QLabel(self.settingsTab)
-        self.hirisePixelArrayLabel.setObjectName(u"hirisePixelArrayLabel")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(1)
-        sizePolicy4.setHeightForWidth(self.hirisePixelArrayLabel.sizePolicy().hasHeightForWidth())
-        self.hirisePixelArrayLabel.setSizePolicy(sizePolicy4)
+        self.cameraResolutionSlider = QSlider(self.settingsTab)
+        self.cameraResolutionSlider.setObjectName(u"cameraResolutionSlider")
+        self.cameraResolutionSlider.setMaximum(15)
+        self.cameraResolutionSlider.setPageStep(1)
+        self.cameraResolutionSlider.setOrientation(Qt.Horizontal)
+        self.cameraResolutionSlider.setTickPosition(QSlider.TicksBelow)
 
-        self.gridLayout_6.addWidget(self.hirisePixelArrayLabel, 4, 0, 1, 1)
+        self.gridLayout_6.addWidget(self.cameraResolutionSlider, 0, 1, 1, 1)
 
-        self.boundingBoxIndexLabel = QLabel(self.settingsTab)
-        self.boundingBoxIndexLabel.setObjectName(u"boundingBoxIndexLabel")
-        sizePolicy2.setHeightForWidth(self.boundingBoxIndexLabel.sizePolicy().hasHeightForWidth())
-        self.boundingBoxIndexLabel.setSizePolicy(sizePolicy2)
+        self.detectionResolutionValue = QLabel(self.settingsTab)
+        self.detectionResolutionValue.setObjectName(u"detectionResolutionValue")
 
-        self.gridLayout_6.addWidget(self.boundingBoxIndexLabel, 5, 0, 1, 1)
+        self.gridLayout_6.addWidget(self.detectionResolutionValue, 1, 2, 1, 1)
 
-        self.hirisePixelArrayValue = QLabel(self.settingsTab)
-        self.hirisePixelArrayValue.setObjectName(u"hirisePixelArrayValue")
+        self.baselinePixelArraySlider = QSlider(self.settingsTab)
+        self.baselinePixelArraySlider.setObjectName(u"baselinePixelArraySlider")
+        self.baselinePixelArraySlider.setMaximum(15)
+        self.baselinePixelArraySlider.setPageStep(1)
+        self.baselinePixelArraySlider.setValue(0)
+        self.baselinePixelArraySlider.setOrientation(Qt.Horizontal)
+        self.baselinePixelArraySlider.setTickPosition(QSlider.TicksBelow)
 
-        self.gridLayout_6.addWidget(self.hirisePixelArrayValue, 4, 2, 1, 1)
+        self.gridLayout_6.addWidget(self.baselinePixelArraySlider, 3, 1, 1, 1)
+
+        self.baselinePixelArrayValue = QLabel(self.settingsTab)
+        self.baselinePixelArrayValue.setObjectName(u"baselinePixelArrayValue")
+
+        self.gridLayout_6.addWidget(self.baselinePixelArrayValue, 3, 2, 1, 1)
 
         self.verticalLayout_2 = QVBoxLayout()
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
@@ -284,46 +265,34 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addWidget(self.currentIndex)
 
 
-        self.gridLayout_6.addLayout(self.verticalLayout_2, 5, 2, 1, 1)
+        self.gridLayout_6.addLayout(self.verticalLayout_2, 4, 2, 1, 1)
 
-        self.baselinePixelArrayLabel = QLabel(self.settingsTab)
-        self.baselinePixelArrayLabel.setObjectName(u"baselinePixelArrayLabel")
+        self.gridLayout_7 = QGridLayout()
+        self.gridLayout_7.setObjectName(u"gridLayout_7")
+        self.nextFace = QPushButton(self.settingsTab)
+        self.nextFace.setObjectName(u"nextFace")
 
-        self.gridLayout_6.addWidget(self.baselinePixelArrayLabel, 3, 0, 1, 1)
+        self.gridLayout_7.addWidget(self.nextFace, 0, 1, 1, 1)
 
-        self.baselinePixelArrayValue = QLabel(self.settingsTab)
-        self.baselinePixelArrayValue.setObjectName(u"baselinePixelArrayValue")
+        self.previousFace = QPushButton(self.settingsTab)
+        self.previousFace.setObjectName(u"previousFace")
 
-        self.gridLayout_6.addWidget(self.baselinePixelArrayValue, 3, 2, 1, 1)
+        self.gridLayout_7.addWidget(self.previousFace, 0, 0, 1, 1)
 
-        self.baselinePixelArraySlider = QSlider(self.settingsTab)
-        self.baselinePixelArraySlider.setObjectName(u"baselinePixelArraySlider")
-        self.baselinePixelArraySlider.setMaximum(15)
-        self.baselinePixelArraySlider.setPageStep(1)
-        self.baselinePixelArraySlider.setValue(0)
-        self.baselinePixelArraySlider.setOrientation(Qt.Horizontal)
-        self.baselinePixelArraySlider.setTickPosition(QSlider.TicksBelow)
+        self.resetFace = QPushButton(self.settingsTab)
+        self.resetFace.setObjectName(u"resetFace")
 
-        self.gridLayout_6.addWidget(self.baselinePixelArraySlider, 3, 1, 1, 1)
+        self.gridLayout_7.addWidget(self.resetFace, 1, 0, 1, 2)
 
-        self.cameraResolutionLabel = QLabel(self.settingsTab)
-        self.cameraResolutionLabel.setObjectName(u"cameraResolutionLabel")
 
-        self.gridLayout_6.addWidget(self.cameraResolutionLabel, 0, 0, 1, 1)
+        self.gridLayout_6.addLayout(self.gridLayout_7, 4, 1, 1, 1)
 
-        self.cameraResolutionValue = QLabel(self.settingsTab)
-        self.cameraResolutionValue.setObjectName(u"cameraResolutionValue")
+        self.detectionResolutionLabel = QLabel(self.settingsTab)
+        self.detectionResolutionLabel.setObjectName(u"detectionResolutionLabel")
+        sizePolicy2.setHeightForWidth(self.detectionResolutionLabel.sizePolicy().hasHeightForWidth())
+        self.detectionResolutionLabel.setSizePolicy(sizePolicy2)
 
-        self.gridLayout_6.addWidget(self.cameraResolutionValue, 0, 2, 1, 1)
-
-        self.cameraResolutionSlider = QSlider(self.settingsTab)
-        self.cameraResolutionSlider.setObjectName(u"cameraResolutionSlider")
-        self.cameraResolutionSlider.setMaximum(15)
-        self.cameraResolutionSlider.setPageStep(1)
-        self.cameraResolutionSlider.setOrientation(Qt.Horizontal)
-        self.cameraResolutionSlider.setTickPosition(QSlider.TicksBelow)
-
-        self.gridLayout_6.addWidget(self.cameraResolutionSlider, 0, 1, 1, 1)
+        self.gridLayout_6.addWidget(self.detectionResolutionLabel, 1, 0, 1, 1)
 
 
         self.formLayout_3.setLayout(0, QFormLayout.FieldRole, self.gridLayout_6)
@@ -358,20 +327,18 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.bandwidthTab), QCoreApplication.translate("MainWindow", u"Bandwidth", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.latencyTab), QCoreApplication.translate("MainWindow", u"Latency", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.summaryTab), QCoreApplication.translate("MainWindow", u"Summary", None))
+        self.baselinePixelArrayLabel.setText(QCoreApplication.translate("MainWindow", u"Baseline Pixel Array Size", None))
+        self.cameraResolutionLabel.setText(QCoreApplication.translate("MainWindow", u"Camera Resolution", None))
+        self.boundingBoxIndexLabel.setText(QCoreApplication.translate("MainWindow", u"Person Index", None))
+        self.cameraResolutionValue.setText(QCoreApplication.translate("MainWindow", u"Value: (96, 96)", None))
         self.detectionResolutionValue.setText(QCoreApplication.translate("MainWindow", u"Value: 32", None))
-        self.detectionResolutionLabel.setText(QCoreApplication.translate("MainWindow", u"ROI Detection Resolution", None))
+        self.baselinePixelArrayValue.setText(QCoreApplication.translate("MainWindow", u"Value: (96, 96)", None))
+        self.facesDetected.setText(QCoreApplication.translate("MainWindow", u"Detected:", None))
+        self.currentIndex.setText(QCoreApplication.translate("MainWindow", u"Current Index: 0", None))
         self.nextFace.setText(QCoreApplication.translate("MainWindow", u"Next", None))
         self.previousFace.setText(QCoreApplication.translate("MainWindow", u"Back", None))
         self.resetFace.setText(QCoreApplication.translate("MainWindow", u"Reset", None))
-        self.hirisePixelArrayLabel.setText(QCoreApplication.translate("MainWindow", u"HiRISE Pixel Array Size", None))
-        self.boundingBoxIndexLabel.setText(QCoreApplication.translate("MainWindow", u"Person Index", None))
-        self.hirisePixelArrayValue.setText(QCoreApplication.translate("MainWindow", u"Value: (96, 96)", None))
-        self.facesDetected.setText(QCoreApplication.translate("MainWindow", u"Detected:", None))
-        self.currentIndex.setText(QCoreApplication.translate("MainWindow", u"Current Index: 0", None))
-        self.baselinePixelArrayLabel.setText(QCoreApplication.translate("MainWindow", u"Baseline Pixel Array Size", None))
-        self.baselinePixelArrayValue.setText(QCoreApplication.translate("MainWindow", u"Value: (96, 96)", None))
-        self.cameraResolutionLabel.setText(QCoreApplication.translate("MainWindow", u"Camera Resolution", None))
-        self.cameraResolutionValue.setText(QCoreApplication.translate("MainWindow", u"Value: (96, 96)", None))
+        self.detectionResolutionLabel.setText(QCoreApplication.translate("MainWindow", u"ROI Detection Resolution", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.settingsTab), QCoreApplication.translate("MainWindow", u"Settings", None))
     # retranslateUi
 

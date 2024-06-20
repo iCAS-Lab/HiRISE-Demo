@@ -52,9 +52,8 @@ class HiRISE(QObject):
         self.baseline_color = (238, 147, 56)
 
         # Original Image Size
-        self.camera_image_size = (96, 96)
-        self.hirise_pixel_array_size = (96, 96)
-        self.camera_image_sizes = {
+        self.current_camera_resolution = (96, 96)
+        self.camera_resolutions = {
             0: (96, 96),
             1: (100, 100),
             2: (128, 128),
@@ -91,34 +90,21 @@ class HiRISE(QObject):
             15: (3840, 2160)
         }
 
-        self.hirise_array_sizes = {
-            0: (96, 96),
-            1: (100, 100),
-            2: (128, 128),
-            3: (256, 256),
-            4: (320, 320),
-            5: (640, 360),
-            6: (640, 480),
-            7: (800, 600),
-            8: (960, 540),
-            9: (960, 720),
-            10: (1024, 576),
-            11: (1280, 720),
-            12: (1280, 960),
-            13: (1920, 1080),
-            14: (2560, 1440),
-            15: (3840, 2160)
-        }
-        self.detect_sizes = {}
+        self.detection_array_sizes = {}
         for i in range(16):
-            self.detect_sizes[i] = (i+1)*32
+            self.detection_array_sizes[i] = (i+1)*32
 
-        # Constant Baseline Computations, divide by 1000 for kB
-        self.bandwidth_baseln = float(self.camera_image_size[0] *
-                                      self.camera_image_size[1] * 3) / 1000
+        # Initial baseline Computations, divide by 1000 for kB
+        self.bandwidth_baseln = float(
+            self.current_camera_resolution[0] *
+            self.current_camera_resolution[1] * 3
+        ) / 1000
         self.c_bandwidth_baseln = (self.bw*self.bh*3.0) / 1000
-        self.peak_memory_baseln = float(self.camera_image_size[0] *
-                                        self.camera_image_size[1] * 3) / 1000
+        # Baseline peak memory
+        self.peak_memory_baseln = float(
+            self.current_camera_resolution[0] *
+            self.current_camera_resolution[1] * 3
+        ) / 1000
         self.c_peak_memory_baseln = (self.bw*self.bh*3.0) / 1000
 
         # Running Values for averaging
@@ -135,11 +121,15 @@ class HiRISE(QObject):
         self.init_stats_dict()
 
     def reset_values(self):
-        self.bandwidth_baseln = float(self.camera_image_size[0] *
-                                      self.camera_image_size[1] * 3) / 1000
+        self.bandwidth_baseln = float(
+            self.current_camera_resolution[0] *
+            self.current_camera_resolution[1] * 3
+        ) / 1000
         self.c_bandwidth_baseln = (self.bw*self.bh*3.0) / 1000
-        self.peak_memory_baseln = float(self.camera_image_size[0] *
-                                        self.camera_image_size[1] * 3) / 1000
+        self.peak_memory_baseln = float(
+            self.current_camera_resolution[0] *
+            self.current_camera_resolution[1] * 3
+        ) / 1000
         self.c_peak_memory_baseln = (self.bw*self.bh*3.0) / 1000
         self.total_latency = 0.0
         self.total_fps = 0.0
@@ -149,25 +139,20 @@ class HiRISE(QObject):
         self.init_stats_dict()
 
     def change_camera_resolution(self, id: int):
-        self.camera_image_size = self.camera_images_size[id]
+        self.current_camera_resolution = self.camera_resolutions[id]
         self.reset_values()
-        return self.camera_image_size
+        return self.current_camera_resolution
 
     def change_baseline_array(self, id: int):
         self.bw, self.bh = self.baseline_array_sizes[id]
         self.reset_values()
         return self.baseline_array_sizes[id]
 
-    def change_hirise_array(self, id: int):
-        self.hirise_pixel_array_size = self.hirise_array_sizes[id]
-        self.reset_values()
-        return self.hirise_pixel_array_size
-
     def change_detection_resolution(self, id: int):
-        self.pooled_img_height = self.detect_sizes[id]
-        self.pooled_img_width = self.detect_sizes[id]
+        self.pooled_img_height = self.detection_array_sizes[id]
+        self.pooled_img_width = self.detection_array_sizes[id]
         self.reset_values()
-        return self.detect_sizes[id]
+        return self.detection_array_sizes[id]
 
     def init_stats_dict(self):
         self.stats = {
@@ -305,9 +290,6 @@ class HiRISE(QObject):
             y -= h//2
         return image[y:y+h, x:x+w]
 
-    def avg(self, running_total, now):
-        return running_total
-
     def update_stats(self):
         self.stats['hirise']['Latency']['fps_now'] = (
             1000 / self.stats['hirise']['Latency']['now']
@@ -374,22 +356,30 @@ class HiRISE(QObject):
 
     def detect(self, ret, frame, tab):
         bandwidth_hirise = 0.0
-        peak_img_sram_hirise = (self.pooled_img_width *
-                                self.pooled_img_height*self.nc)  # HiRISE
+        # HiRISE peak memory calculation
+        peak_img_sram_hirise = (
+            self.pooled_img_width *
+            self.pooled_img_height*self.nc
+        )
         head_image_baseline = None
         head_image_hirise = None
         detect_image = None
-        # Resize the frame, this is the camera's default resolution
-        frame = cv2.resize(frame, self.camera_image_size)
-        # Scale the frame
+        # Resize the frame, this is the camera's default resolution,
+        # this simulates different camera sensor resolutions
+        frame = cv2.resize(frame, self.current_camera_resolution)
+        # Scale the frame for the head detection model since detection
+        # does not require high resolution to detect the heads in the image
         frame_scaled = cv2.resize(
             frame, (self.pooled_img_width, self.pooled_img_height))
-        # Should we convert the image to gray?
+        # Convert to gray if necessary
         if self.gray:
             frame_scaled = cv2.cvtColor(frame_scaled, cv2.COLOR_BGR2GRAY)
             frame_scaled = np.stack((frame_scaled,)*3, axis=-1)
+        # Copy the scaled detection image since we will be resizing it to pass
+        # into the model. We need this to display the detection frame in the
+        # gui.
         detect_image = frame_scaled.copy()
-        # Track the head
+        # Track the head using YOLO model
         head_results_hirise = self.person_model.track(
             cv2.resize(frame_scaled, (96, 96)),
             verbose=False,
@@ -398,31 +388,44 @@ class HiRISE(QObject):
             tracker="botsort.yaml",
             imgsz=96
         )
-
+        # Compute the latency, including pre and post processing along with
+        # inference
         latency = np.sum(list(head_results_hirise[0].speed.values()))
-        # Scale image
+        # Compress the image for the baseline using bw and bh which are the
+        # target resolutions for the baseline. If bw and bh match the current
+        # camera resolution then no compression is performed.
+        # TODO: Should we check that the values of bw and bh are <= to
+        # the current sensor resolution?
         frame_scaled = cv2.resize(frame, (self.bw, self.bh))
-        # frame_scaled = frame.copy()
         x, y, w, h = 0, 0, 0, 0
 
-        # Bandwidth computations
+        # HiRISE Bandwidth computations
         bandwidth_hirise += (
             self.pooled_img_width * self.pooled_img_height * self.nc
         )
         # If we detected head boxes then iterate through
         if len(head_results_hirise[0].boxes) > 0:
+            # Get he ids of the heads
             num_heads = head_results_hirise[0].boxes.id
+            # If no heads were detected then update GUI
             if num_heads is None:
                 self.num_heads = 0
                 self.update_num_heads.emit(self.num_heads)
             elif len(num_heads) != self.num_heads:
+                # If there are heads in the scene, and the number of heads
+                # changed we need to update the GUI
                 # if len(num_heads) < self.num_heads and self.focus_number == self.num_heads - 1:
                 #     self.focus_number -= 1
                 self.num_heads = len(num_heads)
                 self.update_num_heads.emit(self.num_heads)
+            # Now we perform the bounding box drawing and cropping of the faces
+            # based on the bounding boxes returned by the YOLO model.
+            # Keep in mind we have to use the correct source images while
+            # cropping.
             for j, headbox in reversed(
                     list(enumerate(head_results_hirise[0].boxes))):
-                # Ultralytics uses X,Y,W,H bounding box coordinates (x,y are center of bbox)
+                # Ultralytics uses X,Y,W,H bounding box coordinates
+                # (x,y are center of bbox)
                 # https://docs.ultralytics.com/datasets/detect/#ultralytics-yolo-format
 
                 # Convert bbox to coordinates relative to img size
@@ -435,8 +438,10 @@ class HiRISE(QObject):
 
                 # Turn them into a list
                 hx, hy, hw, hh = list(head_relative_xywh)
+                # Compute HiRISE SRAM utilization
                 peak_img_sram_hirise = max(self.peak_img_sram_hirise, hw*hh*3.0)
 
+                # Draw the bounding box on image frame used for detection
                 self.draw_bbox_on_image(
                     detect_image,
                     x+hx-w/2,
@@ -445,7 +450,9 @@ class HiRISE(QObject):
                     hh,
                     color=self.hirise_color if j == 0 else self.baseline_color
                 )
-                # Returns a resized QImage and Numpy Array
+                # Crop the face of the person's head via the coordinates
+                # provided by the YOLO model. Here, we use the original frame
+                # with the full sensor resolution per the HiRISE implementation.
                 head_image_hirise = self.crop_image_by_relative_coords(
                     frame,
                     x+hx-w/2,
@@ -454,7 +461,9 @@ class HiRISE(QObject):
                     hh,
                     center=True,
                 )
-                # Returns a QImage and Numpy Array
+                # Crop the face of the person's head via the coordinates
+                # provided by the YOLO model. Here, we use either the compressed
+                # image or the full image resolution as the baseline.
                 head_image_baseline = self.crop_image_by_relative_coords(
                     frame_scaled,
                     x+hx-w/2,

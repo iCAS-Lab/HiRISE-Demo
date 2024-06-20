@@ -286,15 +286,22 @@ font-size: 16px;</string>
           <layout class="QFormLayout" name="formLayout_3">
            <item row="0" column="1">
             <layout class="QGridLayout" name="gridLayout_6">
-             <item row="1" column="2">
-              <widget class="QLabel" name="detectionResolutionValue">
+             <item row="3" column="0">
+              <widget class="QLabel" name="baselinePixelArrayLabel">
                <property name="text">
-                <string>Value: 32</string>
+                <string>Baseline Pixel Array Size</string>
                </property>
               </widget>
              </item>
-             <item row="1" column="0">
-              <widget class="QLabel" name="detectionResolutionLabel">
+             <item row="0" column="0">
+              <widget class="QLabel" name="cameraResolutionLabel">
+               <property name="text">
+                <string>Camera Resolution</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0">
+              <widget class="QLabel" name="boundingBoxIndexLabel">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                  <horstretch>0</horstretch>
@@ -302,34 +309,9 @@ font-size: 16px;</string>
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>ROI Detection Resolution</string>
+                <string>Person Index</string>
                </property>
               </widget>
-             </item>
-             <item row="5" column="1">
-              <layout class="QGridLayout" name="gridLayout_7">
-               <item row="0" column="1">
-                <widget class="QPushButton" name="nextFace">
-                 <property name="text">
-                  <string>Next</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="0">
-                <widget class="QPushButton" name="previousFace">
-                 <property name="text">
-                  <string>Back</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0" colspan="2">
-                <widget class="QPushButton" name="resetFace">
-                 <property name="text">
-                  <string>Reset</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
              </item>
              <item row="1" column="1">
               <widget class="QSlider" name="detectionResolutionSlider">
@@ -365,31 +347,20 @@ font-size: 16px;</string>
                </property>
               </widget>
              </item>
-             <item row="4" column="1">
-              <widget class="QSlider" name="hirisePixelArraySlider">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>1</verstretch>
-                </sizepolicy>
+             <item row="0" column="2">
+              <widget class="QLabel" name="cameraResolutionValue">
+               <property name="text">
+                <string>Value: (96, 96)</string>
                </property>
-               <property name="minimum">
-                <number>0</number>
-               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QSlider" name="cameraResolutionSlider">
                <property name="maximum">
                 <number>15</number>
                </property>
-               <property name="singleStep">
-                <number>1</number>
-               </property>
                <property name="pageStep">
                 <number>1</number>
-               </property>
-               <property name="value">
-                <number>0</number>
-               </property>
-               <property name="sliderPosition">
-                <number>0</number>
                </property>
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
@@ -397,73 +368,12 @@ font-size: 16px;</string>
                <property name="tickPosition">
                 <enum>QSlider::TicksBelow</enum>
                </property>
-               <property name="tickInterval">
-                <number>1</number>
-               </property>
               </widget>
              </item>
-             <item row="4" column="0">
-              <widget class="QLabel" name="hirisePixelArrayLabel">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>1</verstretch>
-                </sizepolicy>
-               </property>
+             <item row="1" column="2">
+              <widget class="QLabel" name="detectionResolutionValue">
                <property name="text">
-                <string>HiRISE Pixel Array Size</string>
-               </property>
-              </widget>
-             </item>
-             <item row="5" column="0">
-              <widget class="QLabel" name="boundingBoxIndexLabel">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>1</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>Person Index</string>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="2">
-              <widget class="QLabel" name="hirisePixelArrayValue">
-               <property name="text">
-                <string>Value: (96, 96)</string>
-               </property>
-              </widget>
-             </item>
-             <item row="5" column="2">
-              <layout class="QVBoxLayout" name="verticalLayout_2">
-               <item>
-                <widget class="QLabel" name="facesDetected">
-                 <property name="text">
-                  <string>Detected:</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="currentIndex">
-                 <property name="text">
-                  <string>Current Index: 0</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item row="3" column="0">
-              <widget class="QLabel" name="baselinePixelArrayLabel">
-               <property name="text">
-                <string>Baseline Pixel Array Size</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="2">
-              <widget class="QLabel" name="baselinePixelArrayValue">
-               <property name="text">
-                <string>Value: (96, 96)</string>
+                <string>Value: 32</string>
                </property>
               </widget>
              </item>
@@ -486,33 +396,66 @@ font-size: 16px;</string>
                </property>
               </widget>
              </item>
-             <item row="0" column="0">
-              <widget class="QLabel" name="cameraResolutionLabel">
-               <property name="text">
-                <string>Camera Resolution</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="2">
-              <widget class="QLabel" name="cameraResolutionValue">
+             <item row="3" column="2">
+              <widget class="QLabel" name="baselinePixelArrayValue">
                <property name="text">
                 <string>Value: (96, 96)</string>
                </property>
               </widget>
              </item>
-             <item row="0" column="1">
-              <widget class="QSlider" name="cameraResolutionSlider">
-               <property name="maximum">
-                <number>15</number>
+             <item row="4" column="2">
+              <layout class="QVBoxLayout" name="verticalLayout_2">
+               <item>
+                <widget class="QLabel" name="facesDetected">
+                 <property name="text">
+                  <string>Detected:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="currentIndex">
+                 <property name="text">
+                  <string>Current Index: 0</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="4" column="1">
+              <layout class="QGridLayout" name="gridLayout_7">
+               <item row="0" column="1">
+                <widget class="QPushButton" name="nextFace">
+                 <property name="text">
+                  <string>Next</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QPushButton" name="previousFace">
+                 <property name="text">
+                  <string>Back</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0" colspan="2">
+                <widget class="QPushButton" name="resetFace">
+                 <property name="text">
+                  <string>Reset</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="detectionResolutionLabel">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>1</verstretch>
+                </sizepolicy>
                </property>
-               <property name="pageStep">
-                <number>1</number>
-               </property>
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="tickPosition">
-                <enum>QSlider::TicksBelow</enum>
+               <property name="text">
+                <string>ROI Detection Resolution</string>
                </property>
               </widget>
              </item>
