@@ -8,5 +8,5 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     print(app.primaryScreen().size().toTuple())
     main_window = MainWindow()
-    main_window.resize(1920,1080)
+    main_window.resize(960,720)
     sys.exit(app.exec())

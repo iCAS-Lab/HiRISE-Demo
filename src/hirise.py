@@ -18,8 +18,8 @@ class HiRISE(QObject):
         self,
         pooled_img_w: int = 32,
         pooled_img_h: int = 32,
-        # model: str = './src/models/face_det.pt',
-        model: str = './src/models/face_det_full_integer_quant_edgetpu.tflite',
+        model: str = './src/models/face_det.pt',
+        #model: str = './src/models/face_det_full_integer_quant_edgetpu.tflite',
         gray: bool = False,
         basesz: tuple = (96, 96),
     ):
@@ -392,6 +392,7 @@ class HiRISE(QObject):
         )
         # Compute the latency, including pre and post processing along with
         # inference
+        #print(head_results_hirise[0].speed.values())
         latency = np.sum(list(head_results_hirise[0].speed.values()))
         # Compress the image for the baseline using bw and bh which are the
         # target resolutions for the baseline. If bw and bh match the current

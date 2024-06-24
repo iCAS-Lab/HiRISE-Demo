@@ -57,7 +57,8 @@ class MainWindow(QMainWindow):
 
         # Set Camera tab
         self.ui.detectVideo.set_tab(self.current_tab_name)
-        self.showFullScreen()
+        #self.showFullScreen()
+        self.show()
 
     def connect_signals(self):
         self.ui.detectVideo.update_frame.connect(self.update_cameras)
@@ -251,7 +252,7 @@ class MainWindow(QMainWindow):
             + f'{bc_pm_mean:.3f} (mean)\n'
             + f'\t> HiRISE:\n\t{pm_now:.3f} (now) {pm_min:.3f} '
             + f'(min) {pm_max:.3f} (max) '
-            + f'{pm_mean:.3f} (mean)\n'
+            + f'{pm_mean:.3f} (mean)'
         )
         self.bandwidth_stats.setText(
             f'Bandwidth ({band_units}): '
@@ -262,14 +263,13 @@ class MainWindow(QMainWindow):
             + f'{bc_band_min} (min) {bc_band_max} (max) '
             + f'{bc_band_mean:.3f} (mean)\n'
             + f'\t> HiRISE:\n\t{band_now} (now) {band_min} (min) '
-            + f'{band_max} (max) {band_mean:.3f} (mean)\n'
+            + f'{band_max} (max) {band_mean:.3f} (mean)'
         )
         self.latency_stats.setText(
-            f'Latency ({l_units}): '
-            + f'\n\t{l_now:.3f} (now) {l_min:.3f} (min) {l_max:.3f} (max) '
+            f'Latency: '
+            + f'\n\t{l_now:.3f} ms (now) {l_min:.3f} (min) {l_max:.3f} (max) '
             + f'{l_mean:.3f} (mean)'
-            f'\n\nLatency (FPS): '
-            + f'\n\t{fps_now:.1f} (now) {fps_min:.1f} (min) {fps_max:.1f} (max) '
+            + f'\n\t{fps_now:.1f} fps (now) {fps_min:.1f} (min) {fps_max:.1f} (max) '
             + f'{fps_mean:.1f} (mean)'
         )
 
