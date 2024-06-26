@@ -179,7 +179,7 @@ class MainWindow(QMainWindow):
                     ['HiRISE', 'Baseline', 'Baseline Compressed'])
             else:
                 self.current_tab.axes.legend(
-                    ['TPU Inference Latency'])
+                    ['CPU Inference Latency'])
             # Set Labels
             self.current_tab.axes.set_ylabel(
                 data['hirise'][self.current_tab_name]['units'])
