@@ -57,7 +57,7 @@ class MainWindow(QMainWindow):
 
         # Set Camera tab
         self.ui.detectVideo.set_tab(self.current_tab_name)
-        #self.showFullScreen()
+        # self.showFullScreen()
         self.show()
 
     def connect_signals(self):
@@ -247,9 +247,9 @@ class MainWindow(QMainWindow):
             + f'\n\t> Baseline:\n\t{b_pm_now:.3f} (now) {b_pm_min:.3f} '
             + f'(min) {b_pm_max:.3f}'
             + f' (max) {b_pm_mean:.3f} (mean)\n'
-            + f'\t> Baseline Compressed:\n\t{bc_pm_now:.3f} '
-            + f'(now) {bc_pm_min:.3f} (min) {bc_pm_max:.3f} (max) '
-            + f'{bc_pm_mean:.3f} (mean)\n'
+            # + f'\t> Baseline Compressed:\n\t{bc_pm_now:.3f} '
+            # + f'(now) {bc_pm_min:.3f} (min) {bc_pm_max:.3f} (max) '
+            # + f'{bc_pm_mean:.3f} (mean)\n'
             + f'\t> HiRISE:\n\t{pm_now:.3f} (now) {pm_min:.3f} '
             + f'(min) {pm_max:.3f} (max) '
             + f'{pm_mean:.3f} (mean)'
@@ -259,9 +259,9 @@ class MainWindow(QMainWindow):
             + f'\n\t> Baseline Original:\n\t{b_band_now:.3f} (now) '
             + f'{b_band_min:.3f} (min) {b_band_max:.3f} (max) '
             + f'{b_band_mean:.3f} (mean)\n'
-            + f'\t> Baseline Compressed:\n\t{bc_band_now} (now) '
-            + f'{bc_band_min} (min) {bc_band_max} (max) '
-            + f'{bc_band_mean:.3f} (mean)\n'
+            # + f'\t> Baseline Compressed:\n\t{bc_band_now} (now) '
+            # + f'{bc_band_min} (min) {bc_band_max} (max) '
+            # + f'{bc_band_mean:.3f} (mean)\n'
             + f'\t> HiRISE:\n\t{band_now} (now) {band_min} (min) '
             + f'{band_max} (max) {band_mean:.3f} (mean)'
         )
@@ -278,10 +278,10 @@ class MainWindow(QMainWindow):
             return
         # Extract data, pop oldest point, and push newest data point into array
         if self.current_tab_name != 'Latency':
-            self.baseline_data_c = np.concatenate((
-                self.baseline_data_c[1:],
-                np.array([plot_data['baseline'][self.current_tab_name]['c_now']])
-            ))
+            # self.baseline_data_c = np.concatenate((
+            #     self.baseline_data_c[1:],
+            #     np.array([plot_data['baseline'][self.current_tab_name]['c_now']])
+            # ))
             self.baseline_data = np.concatenate((
                 self.baseline_data[1:],
                 np.array([plot_data['baseline'][self.current_tab_name]['now']])
@@ -306,14 +306,14 @@ class MainWindow(QMainWindow):
                 plot_ref_baseline = self.current_tab.axes.plot(
                     self.xdata, self.baseline_data, 'r'
                 )
-                plot_ref_baseline_c = self.current_tab.axes.plot(
-                    self.xdata, self.baseline_data_c, 'b'
-                )
-                self.plot_ref_baseline_c = plot_ref_baseline_c[0]
+                # plot_ref_baseline_c = self.current_tab.axes.plot(
+                #     self.xdata, self.baseline_data_c, 'b'
+                # )
+                # self.plot_ref_baseline_c = plot_ref_baseline_c[0]
                 self.plot_ref_baseline = plot_ref_baseline[0]
         else:
             if self.current_tab_name != 'Latency':
-                self.plot_ref_baseline_c.set_ydata(self.baseline_data_c)
+                # self.plot_ref_baseline_c.set_ydata(self.baseline_data_c)
                 self.plot_ref_baseline.set_ydata(self.baseline_data)
             self.plot_ref_hirise.set_ydata(self.hirise_data)
         # Rescale the y-axis according to data
