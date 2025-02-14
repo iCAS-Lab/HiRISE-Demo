@@ -223,6 +223,27 @@ HiRISE: High-Resolution Image Scaling for Edge ML via In-Sensor Compression and 
 **_Description:_**  
 With the rise of tiny IoT devices powered by machine learning (ML), many researchers have directed their focus toward compressing models to fit on tiny edge devices. Recent works have achieved remarkable success in compressing ML models for object detection and image classification on microcontrollers with small memory, e.g., 512kB SRAM. However, there remain many challenges prohibiting the deployment of ML systems that require high-resolution images. Due to fundamental limits in memory capacity for tiny IoT devices, it may be physically impossible to store large images without external hardware. To this end, we propose a high-resolution image scaling system for edge ML, called HiRISE, which is equipped with selective region-of-interest (ROI) capability leveraging analog in-sensor image scaling. Our methodology not only significantly reduces the peak memory requirements, but also achieves up to 17.7x reduction in data transfer and energy consumption.
 
+### Text
 ```
-TBA
+Brendan Reidy, Sepehr Tabrizchi, Mohammadreza Mohammadi, Shaahin Angizi, Arman Roohi, and Ramtin Zand. 2024. HiRISE: High-Resolution Image Scaling for Edge ML via In-Sensor Compression and Selective ROI. In Proceedings of the 61st ACM/IEEE Design Automation Conference (DAC '24). Association for Computing Machinery, New York, NY, USA, Article 275, 1–6. https://doi.org/10.1145/3649329.3656539
+```
+
+### BibTeX
+```
+@inproceedings{10.1145/3649329.3656539,
+    author = {Reidy, Brendan and Tabrizchi, Sepehr and Mohammadi, Mohammadreza and Angizi, Shaahin and Roohi, Arman and Zand, Ramtin},
+    title = {HiRISE: High-Resolution Image Scaling for Edge ML via In-Sensor Compression and Selective ROI},
+    year = {2024},
+    isbn = {9798400706011},
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    url = {https://doi.org/10.1145/3649329.3656539},
+    doi = {10.1145/3649329.3656539},
+    abstract = {With the rise of tiny IoT devices powered by machine learning (ML), many researchers have directed their focus toward compressing models to fit on tiny edge devices. Recent works have achieved remarkable success in compressing ML models for object detection and image classification on microcontrollers with small memory, e.g., 512kB SRAM. However, there remain many challenges prohibiting the deployment of ML systems that require high-resolution images. Due to fundamental limits in memory capacity for tiny IoT devices, it may be physically impossible to store large images without external hardware. To this end, we propose a high-resolution image scaling system for edge ML, called HiRISE, which is equipped with selective region-of-interest (ROI) capability leveraging analog in-sensor image scaling. Our methodology not only significantly reduces the peak memory requirements, but also achieves up to 17.7\texttimes{} reduction in data transfer and energy consumption.},
+    booktitle = {Proceedings of the 61st ACM/IEEE Design Automation Conference},
+    articleno = {275},
+    numpages = {6},
+    location = {San Francisco, CA, USA},
+    series = {DAC '24}
+}
 ```
